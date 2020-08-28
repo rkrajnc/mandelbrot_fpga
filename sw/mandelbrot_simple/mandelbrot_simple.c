@@ -1,6 +1,6 @@
 // mandelbrot_simple.c
 // 2020, Rok Krajnc <rok.krajnc@gmail.com>
-// Mandelbrot set colored with the Escape time algorithm, 
+// Mandelbrot set colored with the Escape time algorithm 
 
 
 //// includes ////
@@ -134,10 +134,11 @@ int main(int argc, char*argv[])
   // iterate over all image rows
   #pragma omp parallel for ordered schedule(dynamic)
   for (uint32_t img_y=0; img_y<img_h; img_y++) {
+    // convert y image coordinate to Mandelbrot coordinate
     double man_y = (double)(img_y)/(double)img_h*(man_y1-man_y0) + man_y0;
     // iterate over all image columns
     for (uint32_t img_x=0; img_x<img_w; img_x++) {
-      // convert image coordinates to Mandelbrot coordinates
+      // convert x image coordinate to Mandelbrot coordinate
       double man_x = (double)(img_x)/(double)img_w*(man_x1-man_x0) + man_x0;
       // initialize Zn to 0 + i0
       double zn_x = 0.0;
@@ -152,9 +153,6 @@ int main(int argc, char*argv[])
         zn_x = x2 - y2 + man_x;
         x2   = zn_x*zn_x;
         y2   = zn_y*zn_y;
-        /*double xtemp = zn_x*zn_x - zn_y*zn_y + man_x;
-        zn_y = 2*zn_x*zn_y + man_y;
-        zn_x = xtemp;*/
         niterations++;
       }
       // save number of iterations to iterations array
