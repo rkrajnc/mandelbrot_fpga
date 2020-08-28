@@ -1,7 +1,7 @@
 TARGET=mandelbrot_simple
 
 CC=gcc
-CFLAGS=-Wall -O3
+CFLAGS=-Wall -O3 -fopenmp
 
 .PHONY: all
 all: $(TARGET)
