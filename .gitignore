@@ -1,0 +1,12 @@
+# vi backup files
+*~
+
+# Quartus out folder
+fpga/out/
+
+# Quartus db folder
+fpga/db/
+
+# Quartus incremental_db folder
+fpga/incremental_db/
+
