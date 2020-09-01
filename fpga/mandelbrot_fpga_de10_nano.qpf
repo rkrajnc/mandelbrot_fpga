@@ -1,0 +1,6 @@
+DATE = "21:37:22 September 01, 2020"
+QUARTUS_VERSION = "16.0.2"
+
+# Revisions
+
+PROJECT_REVISION = "mandelbrot_fpga_de10_nano"
