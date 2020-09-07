@@ -6,7 +6,7 @@ JedecChain;
 	P ActionCode(Ign)
 		Device PartName(SOCVHPS) MfrSpec(OpMask(0));
 	P ActionCode(Cfg)
-		Device PartName(5CSEBA6U23) Path("Z:/Dropbox/work/electronics/fpga/mandelbrot_fpga/fpga/out/") File("mandelbrot_fpga_de10_nano.sof") MfrSpec(OpMask(1));
+		Device PartName(5CSEBA6U23) Path("Z:/Dropbox/work/electronics/fpga/mandelbrot_fpga/fpga/de10_nano/out/") File("mandelbrot_fpga_de10_nano.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 
