@@ -236,7 +236,13 @@ set_global_assignment -name POWER_DEFAULT_INPUT_IO_TOGGLE_RATE "12.5 %"
 # end ENTITY(sys_pll_0002)
 # ------------------------
 
-set_global_assignment -name SYSTEMVERILOG_FILE ../../rtl/video/video_sync_gen.sv
+
+set_global_assignment -name VERILOG_FILE ../../rtl/i2c/I2C_WRITE_WDATA.v
+set_global_assignment -name VERILOG_FILE ../../rtl/i2c/I2C_HDMI_Config.v
+set_global_assignment -name VERILOG_FILE ../../rtl/i2c/I2C_Controller.v
+set_global_assignment -name VERILOG_FILE ../../rtl/audio/AUDIO_IF.v
+set_global_assignment -name VERILOG_FILE ../../rtl/video/video_sync_gen.v
+set_global_assignment -name SYSTEMVERILOG_FILE ../../rtl/top/mandelbrot_fpga_top.sv
 set_global_assignment -name VERILOG_FILE ../../rtl/blinky/blinky.v
 set_global_assignment -name VERILOG_FILE ../../rtl/reset/reset.v
 set_global_assignment -name VERILOG_FILE ../../rtl/top/mandelbrot_fpga_de10_nano_top.v
