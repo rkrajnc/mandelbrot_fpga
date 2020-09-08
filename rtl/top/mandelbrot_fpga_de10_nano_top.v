@@ -36,16 +36,24 @@ assign pll_rst = !KEY[0];
 
 
 //// system clock ////
-localparam SYS_CLK = 200000000;
+localparam MAN_CLK = 200000000;
+localparam SYS_CLK = 50000000;
+localparam AUD_CLK = 1534526;
 
+wire man_clk_en = 1'b1;
+wire man_clk;
 wire sys_clk_en = 1'b1;
 wire sys_clk;
+wire aud_clk_en = 1'b1;
+wire aud_clk;
 wire sys_pll_locked;
 
 sys_pll sys_clock (
   .refclk     (FPGA_CLK1_50),   // refclk.clk
   .rst        (pll_rst),        // reset.reset
-  .outclk_0   (sys_clk),        // outclk0.clk
+  .outclk_0   (man_clk),        // outclk0.clk
+  .outclk_1   (sys_clk),        // outclk1.clk
+  .outclk_2   (aud_clk),        // outclk2.clk
   .locked     (sys_pll_locked)  // locked.export
 );
 
@@ -65,24 +73,22 @@ vga_pll vga_clock (
 );
 
 
-
 //// reset ////
-localparam NCK = 2;
+localparam NCK = 4;
 localparam RCV = 255;
 
-wire [ NCK-1:0] sys_rst_in;
+wire            man_rst;
 wire            sys_rst;
+wire            aud_rst;
 wire            vga_rst;
-
-assign sys_rst_in = {!vga_pll_locked, !sys_pll_locked};
 
 reset #(
   .NCK    (NCK),  // number of input clocks and reset outputs, min 1
   .RCV    (RCV)   // counter max value, min 1
 ) sys_reset (
-  .clk      ({vga_clk, sys_clk}),
-  .rst_in   (sys_rst_in),
-  .rst_out  ({vga_rst, sys_rst})
+  .clk      ({vga_clk,         aud_clk,         sys_clk,         man_clk}),
+  .rst_in   ({!vga_pll_locked, !sys_pll_locked, !sys_pll_locked, !sys_pll_locked}),
+  .rst_out  ({vga_rst,         aud_rst,         sys_rst,         man_rst})
 );
 
 
@@ -104,34 +110,59 @@ blinky #(
 assign LED[0] = blinky_out;
 
 
+//// HDMI audio ////
+AUDIO_IF hdmi_audio (
+  .clk      (aud_clk),
+  .reset_n  (!aud_rst),
+  .sclk     (HDMI_SCLK),
+  .lrclk    (HDMI_LRCLK),
+  .i2s      (HDMI_I2S)
+);
+
+
+//// HDMI config ////
+I2C_HDMI_Config hdmi_config (
+  .iCLK         (sys_clk),
+  .iRST_N       (!sys_rst),
+  .I2C_SCLK     (HDMI_I2C_SCL),
+  .I2C_SDAT     (HDMI_I2C_SDA),
+  .HDMI_TX_INT  (HDMI_TX_INT)
+);
+
+
 //// mandelbrot_fpga_top module ////
 localparam VW = 8; // video components data width
 
 wire vga_hsync;
 wire vga_vsync;
 wire vga_vld;
-wire vga_r;
-wire vga_g;
-wire vga_b;
+wire [8-1:0] vga_r;
+wire [8-1:0] vga_g;
+wire [8-1:0] vga_b;
 
 mandelbrot_fpga_top mandelbrot_fpga_top (
-  .sys_clk      (sys_clk   ),
-  .sys_clk_en   (sys_clk_en),
-  .sys_rst      (sys_rst   ),
-  .vga_clk      (vga_clk   ),
-  .vga_clk_en   (vga_clk_en),
-  .vga_rst      (vga_rst   ),
-  .vga_hsync    (vga_hsync ),
-  .vga_vsync    (vga_vsync ),
-  .vga_vld      (vga_vld   ),
-  .vga_r        (vga_r     ),
-  .vga_g        (vga_g     ),
-  .vga_b        (vga_b     )
+  .man_clk      (man_clk    ),
+  .man_clk_en   (man_clk_en ),
+  .man_rst      (man_rst    ),
+  .sys_clk      (sys_clk    ),
+  .sys_clk_en   (sys_clk_en ),
+  .sys_rst      (sys_rst    ),
+  .vga_clk      (vga_clk    ),
+  .vga_clk_en   (vga_clk_en ),
+  .vga_rst      (vga_rst    ),
+  .vga_hsync    (vga_hsync  ),
+  .vga_vsync    (vga_vsync  ),
+  .vga_vld      (vga_vld    ),
+  .vga_r        (vga_r      ),
+  .vga_g        (vga_g      ),
+  .vga_b        (vga_b      )
 );
 
-// temp //
-assign LED[1] = vga_hsync;
-assign LED[2] = vga_vsync;
+assign HDMI_TX_CLK  = vga_clk;
+assign HDMI_TX_DE   = vga_vld;
+assign HDMI_TX_D    = {vga_r, vga_g, vga_b};
+assign HDMI_TX_HS   = vga_hsync;
+assign HDMI_TX_VS   = vga_vsync;
 
 
 //// assign unused outputs ////
