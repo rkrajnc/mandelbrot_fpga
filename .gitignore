@@ -1,6 +1,9 @@
 # vi backup files
 *~
 
+# vi swap files
+*swp
+
 # Quartus out folder
 fpga/de10_nano/out/
 
