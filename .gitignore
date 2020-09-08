@@ -2,11 +2,11 @@
 *~
 
 # Quartus out folder
-fpga/out/
+fpga/de10_nano/out/
 
 # Quartus db folder
-fpga/db/
+fpga/de10_nano/db/
 
 # Quartus incremental_db folder
-fpga/incremental_db/
+fpga/de10_nano/incremental_db/
 
