@@ -104,77 +104,34 @@ blinky #(
 assign LED[0] = blinky_out;
 
 
-//// video sync generator ////
-parameter HCW         = 12;       // horizontal counter width
-parameter VCW         = 12;       // vertical counter width
-parameter F_CNT       = 60;       // number of frames in a second
-parameter H_POL       = 1;        // horizontal sync polarity (0=positive, 1=negative)
-parameter H_SYNC      = 96;       // sync pulse width in pixels
-parameter H_BACK      = 45+3;     // back porch width in pixels + added 3 pixels for active 'border'
-parameter H_ACTIVE    = 640;      // active time width in pixels, actual width is 646px with border
-parameter H_FRONT     = 13+3;     // front porch width in pixels + added 3 pixels for active 'border'
-parameter H_WHOLE     = 800;      // whole line width in pixels
-parameter V_POL       = 1;        // vertical sync polarity ((0=positive, 1=negative)
-parameter V_SYNC      = 2;        // sync pulse width in lines
-parameter V_BACK      = 31+2;     // back porch width in lines + added 2 lines for active 'border'
-parameter V_ACTIVE    = 480;      // active time width in lines, acutal width is 484px with border
-parameter V_FRONT     = 8+2;      // front porch width in lines + added 2 lines for active 'border'
-parameter V_WHOLE     = 525;       // whole frame width in lines
+//// mandelbrot_fpga_top module ////
+localparam VW = 8; // video components data width
 
+wire vga_hsync;
+wire vga_vsync;
+wire vga_vld;
+wire vga_r;
+wire vga_g;
+wire vga_b;
 
-wire           vga_en   = 'd1;
-wire [HCW-1:0] h_match  = 'd0;
-wire [VCW-1:0] v_match  = 'd0;
-
-wire [HCW-1:0] h_cnt;         // horizontal counter
-wire [VCW-1:0] v_cnt;         // vertical counter
-wire           cnt_match;     // position match
-wire           active;        // active output (otherwise border)
-wire           blank;         // blank output (otherwise active)
-wire           a_start;       // active start (x==0 && y==0)
-wire           a_end;         // active end ((x==H_ACTIVE-1 && y==V_ACTIVE-1)
-wire [  7-1:0] f_cnt;         // frame counter (resets for every second)
-wire           h_sync;        // horizontal sync signal
-wire           v_sync;        // vertical sync signal
-
-video_sync_gen #(
-  .HCW        (HCW        ),  // horizontal counter width
-  .VCW        (VCW        ),  // vertical counter width
-  .F_CNT      (F_CNT      ),  // number of frames in a second
-  .H_POL      (H_POL      ),  // horizontal sync polarity (0=positive, 1=negative)
-  .H_SYNC     (H_SYNC     ),  // sync pulse width in pixels
-  .H_BACK     (H_BACK     ),  // back porch width in pixels + added 3 pixels for active 'border'
-  .H_ACTIVE   (H_ACTIVE   ),  // active time width in pixels, actual width is 646px with border
-  .H_FRONT    (H_FRONT    ),  // front porch width in pixels + added 3 pixels for active 'border'
-  .H_WHOLE    (H_WHOLE    ),  // whole line width in pixels
-  .V_POL      (V_POL      ),  // vertical sync polarity ((0=positive, 1=negative)
-  .V_SYNC     (V_SYNC     ),  // sync pulse width in lines
-  .V_BACK     (V_BACK     ),  // back porch width in lines + added 2 lines for active 'border'
-  .V_ACTIVE   (V_ACTIVE   ),  // active time width in lines, acutal width is 484px with border
-  .V_FRONT    (V_FRONT    ),  // front porch width in lines + added 2 lines for active 'border'
-  .V_WHOLE    (V_WHOLE    )   // whole frame width in lines
-) video_sync_gen (
-  .clk        (vga_clk    ),  // clock
-  .clk_en     (vga_clk_en ),  // clock enable
-  .rst        (vga_rst    ),  // reset
-  .en         (vga_en     ),  // enable counters
-  .h_match    (h_match    ),  // horizontal counter match compare value
-  .v_match    (v_match    ),  // vertical counter match compare value
-  .h_cnt      (h_cnt      ),  // horizontal counter
-  .v_cnt      (v_cnt      ),  // vertical counter
-  .cnt_match  (cnt_match  ),  // position match
-  .active     (active     ),  // active output (otherwise border)
-  .blank      (blank      ),  // blank output (otherwise active)
-  .a_start    (a_start    ),  // active start (x==0 && y==0)
-  .a_end      (a_end      ),  // active end ((x==H_ACTIVE-1 && y==V_ACTIVE-1)
-  .f_cnt      (f_cnt      ),  // frame counter (resets for every second)
-  .h_sync     (h_sync     ),  // horizontal sync signal
-  .v_sync     (v_sync     )   // vertical sync signal
+mandelbrot_fpga_top mandelbrot_fpga_top (
+  .sys_clk      (sys_clk   ),
+  .sys_clk_en   (sys_clk_en),
+  .sys_rst      (sys_rst   ),
+  .vga_clk      (vga_clk   ),
+  .vga_clk_en   (vga_clk_en),
+  .vga_rst      (vga_rst   ),
+  .vga_hsync    (vga_hsync ),
+  .vga_vsync    (vga_vsync ),
+  .vga_vld      (vga_vld   ),
+  .vga_r        (vga_r     ),
+  .vga_g        (vga_g     ),
+  .vga_b        (vga_b     )
 );
 
 // temp //
-assign LED[1] = h_sync;
-assign LED[2] = v_sync;
+assign LED[1] = vga_hsync;
+assign LED[2] = vga_vsync;
 
 
 //// assign unused outputs ////
