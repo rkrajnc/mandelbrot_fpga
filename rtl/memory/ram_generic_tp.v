@@ -32,8 +32,8 @@ reg [DW-1:0] mem [0:MD-1];
 //// memory initialization ////
 initial begin
   if (MI == "") begin : MEM_FILL_BLK
-    integer i;
-    for (i=0; i<MD; i=i+1) mem[i] = i;
+/*    integer i;
+    for (i=0; i<MD; i=i+1) mem[i] = i; */
   end else begin : MEM_LOAD_BLK
     $readmemh(MI, mem);
   end

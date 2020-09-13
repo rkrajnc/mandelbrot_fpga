@@ -23,16 +23,22 @@ module rom_generic_sp #(
 reg [DW-1:0] mem [0:MD-1];
 
 
-//// load memory data ////
+//// memory initialization ////
 initial begin
-  if (MI != "") $readmemh(MI, mem);
+  if (MI == "") begin : MEM_FILL_BLK
+/*
+    integer i;
+    for (i=0; i<MD; i=i+1) mem[i] = i; */
+  end else begin : MEM_LOAD_BLK
+    $readmemh(MI, mem);
+  end
 end
 
 
 //// memory read ////
 reg  [DW-1:0] mem_dat_r;
 
-always @ (posedge clk, posedge rst) begin
+always @ (posedge clk) begin
   if (clk_en && rd)
     mem_dat_r <= #1 mem[adr];
 end
