@@ -102,7 +102,7 @@ always @ (posedge clk, posedge rst) begin
     blank  <= #1 1'b0;
   end else if (clk_en) begin
     active <= #1   (h_cnt_r < H_ACTIVE) && (v_cnt_r < V_ACTIVE) && en;
-    blank  <= #1 !((h_cnt_r < H_ACTIVE) && (v_cnt_r < V_ACTIVE));
+    blank  <= #1 !((h_cnt_r < H_ACTIVE) && (v_cnt_r < V_ACTIVE)) || !en;
   end
 end
 
