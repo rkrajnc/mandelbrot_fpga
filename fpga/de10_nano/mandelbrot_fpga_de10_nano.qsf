@@ -237,12 +237,15 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 # ------------------------
 
 
+set_global_assignment -name VERILOG_FILE ../../rtl/memory/rom_generic_sp.v
+set_global_assignment -name VERILOG_FILE ../../rtl/memory/ram_generic_tp.v
+set_global_assignment -name VERILOG_FILE ../../rtl/video/video_sync_gen.v
+set_global_assignment -name VERILOG_FILE ../../rtl/video/video_pipe_sync_top.v
+set_global_assignment -name SYSTEMVERILOG_FILE ../../rtl/top/mandelbrot_fpga_top.sv
 set_global_assignment -name VERILOG_FILE ../../rtl/i2c/I2C_WRITE_WDATA.v
 set_global_assignment -name VERILOG_FILE ../../rtl/i2c/I2C_HDMI_Config.v
 set_global_assignment -name VERILOG_FILE ../../rtl/i2c/I2C_Controller.v
 set_global_assignment -name VERILOG_FILE ../../rtl/audio/AUDIO_IF.v
-set_global_assignment -name VERILOG_FILE ../../rtl/video/video_sync_gen.v
-set_global_assignment -name SYSTEMVERILOG_FILE ../../rtl/top/mandelbrot_fpga_top.sv
 set_global_assignment -name VERILOG_FILE ../../rtl/blinky/blinky.v
 set_global_assignment -name VERILOG_FILE ../../rtl/reset/reset.v
 set_global_assignment -name VERILOG_FILE ../../rtl/top/mandelbrot_fpga_de10_nano_top.v
