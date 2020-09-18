@@ -198,6 +198,17 @@ int main(int argc, char*argv[])
   printf("all iterations:     %lu\n", sum_iterations);
   printf("average iter/pixel: %f\n", (double)sum_iterations/(double)(img_w*img_h));
 
+  // dump clut
+  FILE* clut_fp = NULL;
+  if ((clut_fp  = fopen("clut.hex", "wb")) == NULL) {
+    fprintf(stderr, "Can't open output file " "clut.hex" ", exiting.\n");
+    exit(EXIT_FAILURE);
+  }
+  for (int i=0; i<NITERATIONS; i++) {
+    fprintf(clut_fp, "%02x%02x%02x\n", palette[i].r, palette[i].g, palette[i].b);
+  }
+  fclose(clut_fp);
+
   // exit
   exit(EXIT_SUCCESS);
 }
