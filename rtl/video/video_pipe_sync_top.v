@@ -50,31 +50,6 @@ localparam V_FRONT    = 8+2;  // front porch width in lines + added 2 lines for 
 localparam V_WHOLE    = 525;  // whole frame width in lines
 
 
-/*
-//// local types ////
-typedef struct packed {
-  wire [HCW-1:0] h_cnt;
-  wire [VCW-1:0] v_cnt;
-  wire           active;
-  wire           a_start;
-  wire           a_end;
-  wire           blank;
-  wire           h_sync;
-  wire           v_sync;
-  wire [ CW-1:0] r;
-  wire [ CW-1:0] g;
-  wire [ CW-1:0] b;
-} video_pipe_t;
-
-
-//// video pipe registers ////
-localparam VPD = 5; // video pipe depth
-
-video_pipe_t vp [0:VPD-1];
-video_pipe_t vp0;
-*/
-
-
 //// video sync generator ////
 wire [ HCW-1:0] h_match  = 'd0;
 wire [ VCW-1:0] v_match  = 'd0;
@@ -152,6 +127,7 @@ reg  [     HCW-1:0] vram_h_cnt  [0:1];
 reg  [     VCW-1:0] vram_v_cnt  [0:1];
 
 ram_generic_tp #(
+  .MI               (""),   // memory initialization file
   .READ_REGISTERED  (1),    // when true, read port has an additional register
   .DW               (MDW),  // data width
   .MD               (MD),   // memory depth
@@ -186,6 +162,7 @@ end
 
 
 //// indexed color lookup ////
+localparam CLUT_MI = "../../rtl/memory/mandelbrot_clut_8.hex"; // CLUT memory initialization file
 localparam CLUT_DW = 3*CW;            // CLUT data width
 localparam CLUT_MD = 1<<MDW;          // CLUT memory depth
 localparam CLUT_AW = $clog2(CLUT_MD); // CLUT address width
@@ -204,10 +181,10 @@ reg  [     VCW-1:0] clut_v_cnt;
 assign clut_adr = vram_dat_r;
 
 rom_generic_sp #(
-  .MI (""),              // memory initialization file
-  .DW (CLUT_DW),         // data width
-  .MD (CLUT_MD),         // memory depth
-  .AW (CLUT_AW)          // address width
+  .MI (CLUT_MI),  // memory initialization file
+  .DW (CLUT_DW),  // data width
+  .MD (CLUT_MD),  // memory depth
+  .AW (CLUT_AW)   // address width
 ) video_clut_rom (
   .clk    (clk        ), // clock
   .clk_en (clk_en     ), // clock enable
@@ -252,9 +229,9 @@ assign lines = line_top || line_middle || line_bottom || line_left || line_cente
 
 always @ (posedge clk) begin
   if (clk_en) begin
-    lines_r       <= #1 clut_active ? (lines ? {CW{1'b1}} : clut_dat_r[3*CW-1:2*CW]) : {CW{1'b0}};
-    lines_g       <= #1 clut_active ? (lines ? {CW{1'b1}} : clut_dat_r[2*CW-1:1*CW]) : {CW{1'b0}};
-    lines_b       <= #1 clut_active ? (lines ? {CW{1'b1}} : clut_dat_r[1*CW-1:0*CW]) : {CW{1'b0}};
+    lines_r       <= #1 clut_active ? (border_en && lines ? {CW{1'b1}} : clut_dat_r[3*CW-1:2*CW]) : {CW{1'b0}};
+    lines_g       <= #1 clut_active ? (border_en && lines ? {CW{1'b1}} : clut_dat_r[2*CW-1:1*CW]) : {CW{1'b0}};
+    lines_b       <= #1 clut_active ? (border_en && lines ? {CW{1'b1}} : clut_dat_r[1*CW-1:0*CW]) : {CW{1'b0}};
     lines_active  <= #1 clut_active;
     lines_hsync   <= #1 clut_hsync;
     lines_vsync   <= #1 clut_vsync;
