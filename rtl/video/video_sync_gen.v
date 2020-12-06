@@ -45,7 +45,7 @@ module video_sync_gen #(
 
 
 //// horizontal counter ////
-reg [HCW-1:0] h_cnt_r;
+reg [HCW-1:0] h_cnt_r=0;
 
 always @ (posedge clk, posedge rst) begin
   if (rst)

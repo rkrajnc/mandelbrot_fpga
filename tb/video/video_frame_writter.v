@@ -7,7 +7,7 @@ module video_frame_writter #(
   parameter FILENAME  = "frame_",
   parameter WIDTH     = 640,
   parameter HEIGHT    = 480,
-  parameter CW        = 8
+  parameter CCW       = 8
 )(
   // system
   input  wire           vid_clk,
@@ -15,9 +15,9 @@ module video_frame_writter #(
   input  wire           vid_rst,
   // video input
   input  wire           vid_active,
-  input  wire [ CW-1:0] vid_r,
-  input  wire [ CW-1:0] vid_g,
-  input  wire [ CW-1:0] vid_b
+  input  wire [CCW-1:0] vid_r,
+  input  wire [CCW-1:0] vid_g,
+  input  wire [CCW-1:0] vid_b
 );
 
 
@@ -69,15 +69,15 @@ endtask
 task write_ppm_header;
 begin
   if (!fp) open_file();
-  $fwrite(fp, "P3\n%d %d\n%d\n", WIDTH, HEIGHT, 1<<CW);
+  $fwrite(fp, "P3\n%d %d\n%d\n", WIDTH, HEIGHT, 1<<CCW);
   header_written = 1;
 end
 endtask
 
 task write_pixel;
-  input [CW-1:0] r;
-  input [CW-1:0] g;
-  input [CW-1:0] b;
+  input [CCW-1:0] r;
+  input [CCW-1:0] g;
+  input [CCW-1:0] b;
 begin
   $fwrite(fp, "%d %d %d\n", r, g, b);
 end
