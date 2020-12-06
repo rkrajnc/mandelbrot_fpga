@@ -14,7 +14,7 @@ module video_pipe_sync_top_tb();
 localparam CLK_HPER = 10;   // clock half-period
 localparam WIDTH    = 640;  // image width
 localparam HEIGHT   = 480;  // image height
-localparam CW       = 8;    // color component width
+localparam CCW      = 8;    // color component width
 localparam MAW      = 19;   // memory address width
 localparam MDW      = 8;    // memory data width
 
@@ -98,7 +98,7 @@ wire [8-1:0] vid_g;
 wire [8-1:0] vid_b;
 
 video_pipe_sync_top #(
-  .CW  (CW),  // color component width
+  .CCW (CCW),  // color component width
   .MAW (MAW), // memory address width
   .MDW (MDW)  // memory data width
 ) DUT (
@@ -106,8 +106,8 @@ video_pipe_sync_top #(
   .clk_en         (clk_en     ),  // video clock enable
   .rst            (rst        ),  // video clock reset
   .en             (en         ),  // enable video pipe
-  .border_en      (1'b1       ),  // enable drawing of border
-  .console_en     (1'b0       ),  // enable textual console
+  .border_en      (1'b0       ),  // enable drawing of border
+  .console_en     (1'b1       ),  // enable textual console
   .vram_clk_w     (1'b0       ),  // video memory write clock
   .vram_clk_en_w  (1'b0       ),  // video memory clock enable
   .vram_we        (1'b0       ),  // video memory write enable
@@ -127,7 +127,7 @@ video_frame_writter #(
   .FILENAME ("frame_"),
   .WIDTH    (WIDTH),
   .HEIGHT   (HEIGHT),
-  .CW       (CW)
+  .CCW      (CCW)
 ) video_frame_writter (
  .vid_clk     (clk        ),
  .vid_clk_en  (clk_en     ),
@@ -139,13 +139,16 @@ video_frame_writter #(
 );
 
 
-/*
-//// dump variables ////
-initial begin
-  $dumpfile("out.vcd");
-  $dumpvars(0, video_pipe_sync_top_tb);
-end
-*/
+//// dump variables for icarus ////
+`ifdef SIM_ICARUS
+  `ifdef SIM_WAVES
+    initial begin
+      $dumpfile(`WAV_FILE);
+      $dumpvars(0, video_pipe_sync_top_tb);
+      //$dumpvars(SRC_CLK_PERIOD, clock_frequency_check_tb);
+    end
+  `endif
+`endif
 
 
 endmodule
