@@ -4,37 +4,44 @@
 
 
 module video_pipe_sync_top #(
-  parameter CCW = 8,  // color component width
-  parameter MAW = 19, // memory address width
-  parameter MDW = 8   // memory data width
+  parameter CCW   = 8,    // color component width
+  parameter TW    = 80,   // console text width in characters
+  parameter TH    = 2,    // console text height in characters
+  parameter CMAW  = 8,    // console memory address width
+  parameter CMDW  = 8,    // console memory data width
+  parameter IMAW  = 19,   // index memory address width
+  parameter IMDW  = 8,    // index memory data width
+  parameter CFR   = 200,  // console text foreground color red value
+  parameter CFG   = 200,  // console text foreground color green value
+  parameter CFB   = 200   // console text foreground color blue value
 )(
   // system
-  input  wire           clk,            // video clock
-  input  wire           clk_en,         // video clock enable
-  input  wire           rst,            // video clock reset
+  input  wire             clk,            // video clock
+  input  wire             clk_en,         // video clock enable
+  input  wire             rst,            // video clock reset
   // control
-  input  wire           en,             // enable video pipe
-  input  wire           border_en,      // enable drawing of border
-  input  wire           console_en,     // enable textual console
+  input  wire             en,             // enable video pipe
+  input  wire             border_en,      // enable drawing of border
+  input  wire             console_en,     // enable textual console
   // video ram write interface
-  input  wire           vram_clk_w,     // video memory write clock
-  input  wire           vram_clk_en_w,  // video memory clock enable
-  input  wire           vram_we,        // video memory write enable
-  input  wire [MAW-1:0] vram_adr_w,     // video memory write address
-  input  wire [MDW-1:0] vram_dat_w,     // video memory write data
+  input  wire             vram_clk_w,     // video memory write clock
+  input  wire             vram_clk_en_w,  // video memory clock enable
+  input  wire             vram_we,        // video memory write enable
+  input  wire [ IMAW-1:0] vram_adr_w,     // video memory write address
+  input  wire [ IMDW-1:0] vram_dat_w,     // video memory write data
   // console ram write interface
-  input  wire           con_clk_w,      // console memory write clock
-  input  wire           con_clk_en_w,   // console memory clock enable
-  input  wire           con_we,         // console memory write enable
-  input  wire [MAW-1:0] con_adr_w,      // console memory write address
-  input  wire [MDW-1:0] con_dat_w,      // console memory write data
+  input  wire             con_clk_w,      // console memory write clock
+  input  wire             con_clk_en_w,   // console memory clock enable
+  input  wire             con_we,         // console memory write enable
+  input  wire [ CMAW-1:0] con_adr_w,      // console memory write address
+  input  wire [ CMDW-1:0] con_dat_w,      // console memory write data
   // video output
-  output wire           vid_active,     // video active (not blanked)
-  output wire           vid_hsync,      // video horizontal sync
-  output wire           vid_vsync,      // video vertical sync
-  output wire [CCW-1:0] vid_r,          // video red component
-  output wire [CCW-1:0] vid_g,          // video green component
-  output wire [CCW-1:0] vid_b           // video blue component
+  output wire             vid_active,     // video active (not blanked)
+  output wire             vid_hsync,      // video horizontal sync
+  output wire             vid_vsync,      // video vertical sync
+  output wire [  CCW-1:0] vid_r,          // video red component
+  output wire [  CCW-1:0] vid_g,          // video green component
+  output wire [  CCW-1:0] vid_b           // video blue component
 );
 
 
@@ -57,8 +64,8 @@ localparam V_WHOLE    = 525;  // whole frame width in lines
 
 
 //// video sync generator ////
-wire [ HCW-1:0] h_match  = 'd0;
-wire [ VCW-1:0] v_match  = 'd0;
+wire [ HCW-1:0] h_match = 'd0;
+wire [ VCW-1:0] v_match = 'd0;
 wire [ HCW-1:0] h_cnt;
 wire [ VCW-1:0] v_cnt;
 wire            active;
@@ -104,74 +111,107 @@ video_sync_gen #(
 );
 
 
-//// video console ////
-// TODO
+//// video sync signals delay ////
+localparam VD = 6; // amount of video pipe stages
+reg  [     HCW-1:0] h_cnt_d   [0:VD-1];
+reg  [     VCW-1:0] v_cnt_d   [0:VD-1];
+reg                 active_d  [0:VD-1];
+reg                 blank_d   [0:VD-1];
+reg                 a_start_d [0:VD-1];
+reg                 a_end_d   [0:VD-1];
+reg                 hsync_d   [0:VD-1];
+reg                 vsync_d   [0:VD-1];
 
-wire [CCW-1:0] con_r;
-wire [CCW-1:0] con_g;
-wire [CCW-1:0] con_b;
+always @ (*) begin
+  h_cnt_d[0]    = h_cnt;
+  v_cnt_d[0]    = v_cnt;
+  active_d[0]   = active;
+  blank_d[0]    = blank;
+  a_start_d[0]  = a_start;
+  a_end_d[0]    = a_end;
+  hsync_d[0]    = hsync;
+  vsync_d[0]    = vsync;
+end
+
+genvar i;
+generate for (i=1; i<VD; i=i+1) begin : SYNC_PIPE_BLK
+  always @ (posedge clk) begin
+    if (clk_en) begin
+      h_cnt_d[i]    <= #1 h_cnt_d[i-1];
+      v_cnt_d[i]    <= #1 v_cnt_d[i-1];
+      active_d[i]   <= #1 active_d[i-1];
+      blank_d[i]    <= #1 blank_d[i-1];
+      a_start_d[i]  <= #1 a_start_d[i-1];
+      a_end_d[i]    <= #1 a_end_d[i-1];
+      hsync_d[i]    <= #1 hsync_d[i-1];
+      vsync_d[i]    <= #1 vsync_d[i-1];
+    end
+  end
+end endgenerate
+
+
+//// video text console ////
+// input sync signals start from clk 0
+// video text console has a latency of 4 clks
+wire con_active;
+wire con_pixel;
 
 video_text_console #(
-  .HCW (HCW), // horizontal counter width
-  .VCW (VCW)  // vertical counter width
+  .TW   (TW   ),  // console text width in characters
+  .TH   (TH   ),  // console text height in characters
+  .MAW  (CMAW ),  // console memory address width
+  .MDW  (CMDW ),  // console memory data width
+  .HCW  (HCW  ),  // horizontal counter width
+  .VCW  (VCW  )   // vertical counter width
 ) video_text_console (
-  .clk          (clk),            // video clock
-  .clk_en       (clk_en),         // video clock enable
-  .rst          (rst),            // video clock reset
-  .en           (1'b1),             // enable console
-  .con_clk_w    (),      // console memory write clock
-  .con_clk_en_w (),   // console memory clock enable
-  .con_we       (),         // console memory write enable
-  .con_adr_w    (),      // console memory write address
-  .con_dat_w    (),      // console memory write data
-  .active       (active),
-  .a_start      (a_start),
-  .a_end        (a_end),
-  .h_cnt        (h_cnt),          // horizontal counter
-  .v_cnt        (v_cnt),          // vertical counter
-  .con_r        (con_r),          // video red component
-  .con_g        (con_g),          // video green component
-  .con_b        (con_b)           // video blue component
+  .clk          (clk          ),  // video clock
+  .clk_en       (clk_en       ),  // video clock enable
+  .rst          (rst          ),  // video clock reset
+  .en           (console_en   ),  // enable console
+  .con_clk_w    (con_clk_w    ),  // console memory write clock
+  .con_clk_en_w (con_clk_en_w ),  // console memory clock enable
+  .con_we       (con_we       ),  // console memory write enable
+  .con_adr_w    (con_adr_w    ),  // console memory write address
+  .con_dat_w    (con_dat_w    ),  // console memory write data
+  .a_end        (a_end_d[0]   ),  // video sync active end
+  .h_cnt        (h_cnt_d[0]   ),  // horizontal counter
+  .v_cnt        (v_cnt_d[0]   ),  // vertical counter
+  .con_active   (con_active   ),  // video sync counters are in console area
+  .con_pixel    (con_pixel    )   // current console pixel is foreground (font) when 1, background when 0
 );
 
 
-
-
 //// video ram read ////
+// input sync signals start from clk 0, latency is 1
 wire            vram_rd;    // video ram read enable
-reg  [ MAW-1:0] vram_adr_r; // video ram read address
-wire [ MDW-1:0] vram_dat_r; // video ram read data
+reg  [IMAW-1:0] vram_adr_r; // video ram read address
+wire [IMDW-1:0] vram_dat_r; // video ram read data
 
-assign vram_rd = active;
+assign vram_rd = active_d[0];
 
 always @ (posedge clk, posedge rst) begin
   if (rst) begin
-    vram_adr_r <= #1 {MAW{1'b0}};
+    vram_adr_r <= #1 {IMAW{1'b0}};
   end else if (clk_en) begin
-    if (a_end || !en)
-      vram_adr_r <= #1 {MAW{1'b0}};
-    else if (active && en)
-     vram_adr_r <= #1 vram_adr_r + { {(MAW-1){1'b0}}, 1'b1 };
+    if (a_end_d[0] || !en)
+      vram_adr_r <= #1 {IMAW{1'b0}};
+    else if (active_d[0] && en)
+     vram_adr_r <= #1 vram_adr_r + { {(IMAW-1){1'b0}}, 1'b1 };
   end
 end
 
 
 //// video index ram ////
+// input sync signals start from clk 1, latency is 2
 localparam IRAM_MI = "";//"../../rtl/memory/vid_ram.hex";
-localparam MD = H_WHOLE*V_WHOLE;  // memory depth
-
-reg                 vram_active [0:1];
-reg                 vram_hsync  [0:1];
-reg                 vram_vsync  [0:1];
-reg  [     HCW-1:0] vram_h_cnt  [0:1];
-reg  [     VCW-1:0] vram_v_cnt  [0:1];
+localparam IMD = H_ACTIVE*V_ACTIVE;  // memory depth
 
 ram_generic_tp #(
   .MI               (IRAM_MI),  // memory initialization file
   .READ_REGISTERED  (1),        // when true, read port has an additional register
-  .DW               (MDW),      // data width
-  .MD               (MD),       // memory depth
-  .AW               (MAW)       // address width
+  .DW               (IMDW),     // data width
+  .MD               (IMD),      // memory depth
+  .AW               (IMAW)      // address width
 ) video_index_ram (
   .clk_w    (vram_clk_w   ),  // write clock
   .clk_en_w (vram_clk_en_w),  // write clock enable
@@ -185,38 +225,19 @@ ram_generic_tp #(
   .dat_r    (vram_dat_r   )   // read data
 );
 
-always @ (posedge clk) begin
-  if (clk_en) begin
-    vram_active[0] <= #1 active;
-    vram_active[1] <= #1 vram_active[0];
-    vram_hsync[0]  <= #1 hsync;
-    vram_hsync[1]  <= #1 vram_hsync[0];
-    vram_vsync[0]  <= #1 vsync;
-    vram_vsync[1]  <= #1 vram_vsync[0];
-    vram_h_cnt[0]  <= #1 h_cnt;
-    vram_h_cnt[1]  <= #1 vram_h_cnt[0];
-    vram_v_cnt[0]  <= #1 v_cnt;
-    vram_v_cnt[1]  <= #1 vram_v_cnt[0];
-  end
-end
-
 
 //// indexed color lookup ////
-localparam CLUT_MI = "../../rtl/memory/mandelbrot_clut_8.hex"; // CLUT memory initialization file
+// input sync signals start from clk 3, latency is 1
+localparam CLUT_MI = "../../roms/mandelbrot_clut_8.hex"; // CLUT memory initialization file
 localparam CLUT_DW = 3*CCW;           // CLUT data width
-localparam CLUT_MD = 1<<MDW;          // CLUT memory depth
+localparam CLUT_MD = 1<<IMDW;         // CLUT memory depth
 localparam CLUT_AW = $clog2(CLUT_MD); // CLUT address width
 
-wire [     MDW-1:0] clut_adr;
+wire [    IMDW-1:0] clut_adr;
 wire [ CLUT_DW-1:0] clut_dat_r;
 wire [     CCW-1:0] clut_r;
 wire [     CCW-1:0] clut_g;
 wire [     CCW-1:0] clut_b;
-reg                 clut_active;
-reg                 clut_hsync;
-reg                 clut_vsync;
-reg  [     HCW-1:0] clut_h_cnt;
-reg  [     VCW-1:0] clut_v_cnt;
 
 assign clut_adr = vram_dat_r;
 
@@ -233,59 +254,64 @@ rom_generic_sp #(
   .dat_r  (clut_dat_r )  // read data
 );
 
+
+//// border ////
+wire  border_line_top;
+wire  border_line_middle;
+wire  border_line_bottom;
+wire  border_line_left;
+wire  border_line_center;
+wire  border_line_right;
+reg   border_lines;
+
+assign border_line_top     = v_cnt_d[3] == 'd0;
+assign border_line_middle  = v_cnt_d[3] == V_ACTIVE/2;
+assign border_line_bottom  = v_cnt_d[3] == V_ACTIVE-1;
+assign border_line_left    = h_cnt_d[3] == 'd0;
+assign border_line_center  = h_cnt_d[3] == H_ACTIVE/2;
+assign border_line_right   = h_cnt_d[3] == H_ACTIVE-1;
+
 always @ (posedge clk) begin
   if (clk_en) begin
-    clut_active <= #1 vram_active[1];
-    clut_hsync  <= #1 vram_hsync[1];
-    clut_vsync  <= #1 vram_vsync[1];
-    clut_h_cnt  <= #1 vram_h_cnt[1];
-    clut_v_cnt  <= #1 vram_v_cnt[1];
+    border_lines <= #1 (border_line_top || border_line_middle || border_line_bottom || border_line_left || border_line_center || border_line_right);
   end
 end
 
 
-//// border ////
-wire          line_top;
-wire          line_middle;
-wire          line_bottom;
-wire          line_left;
-wire          line_center;
-wire          line_right;
-wire          lines;
-reg [CCW-1:0] lines_r;
-reg [CCW-1:0] lines_g;
-reg [CCW-1:0] lines_b;
-reg           lines_active;
-reg           lines_hsync;
-reg           lines_vsync;
-
-assign line_top     = clut_v_cnt == 'd0;
-assign line_middle  = clut_v_cnt == V_ACTIVE/2;
-assign line_bottom  = clut_v_cnt == V_ACTIVE-1;
-assign line_left    = clut_h_cnt == 'd0;
-assign line_center  = clut_h_cnt == H_ACTIVE/2;
-assign line_right   = clut_h_cnt == H_ACTIVE-1;
-assign lines = line_top || line_middle || line_bottom || line_left || line_center || line_right;
+//// mixer ////
+reg  [ CCW-1:0] vid_mixer_r;
+reg  [ CCW-1:0] vid_mixer_g;
+reg  [ CCW-1:0] vid_mixer_b;
 
 always @ (posedge clk) begin
   if (clk_en) begin
-    lines_r       <= #1 clut_active ? (border_en && lines ? {CCW{1'b1}} : con_r + clut_dat_r[3*CCW-1:2*CCW]) : {CCW{1'b0}};
-    lines_g       <= #1 clut_active ? (border_en && lines ? {CCW{1'b1}} : con_g + clut_dat_r[2*CCW-1:1*CCW]) : {CCW{1'b0}};
-    lines_b       <= #1 clut_active ? (border_en && lines ? {CCW{1'b1}} : con_b + clut_dat_r[1*CCW-1:0*CCW]) : {CCW{1'b0}};
-    lines_active  <= #1 clut_active;
-    lines_hsync   <= #1 clut_hsync;
-    lines_vsync   <= #1 clut_vsync;
+    if (border_en && border_lines) begin
+      // border lines take priority over everything
+      vid_mixer_r <= #1 {CCW{1'b1}};
+      vid_mixer_g <= #1 {CCW{1'b1}};
+      vid_mixer_b <= #1 {CCW{1'b1}};
+    end else if (console_en && con_active) begin
+      // we are in console area, display foreground unchanged, background is darkened video
+      vid_mixer_r <= #1 con_pixel ? CFR[CCW-1:0] : {2'b0, clut_dat_r[3*CCW-1:2*CCW+2]}; // 23:17
+      vid_mixer_g <= #1 con_pixel ? CFG[CCW-1:0] : {2'b0, clut_dat_r[2*CCW-1:1*CCW+2]}; // 15:9
+      vid_mixer_b <= #1 con_pixel ? CFB[CCW-1:0] : {2'b0, clut_dat_r[1*CCW-1:0*CCW+2]}; // 7:1
+    end else begin
+      // normal video
+      vid_mixer_r <= #1 clut_dat_r[3*CCW-1:2*CCW];
+      vid_mixer_g <= #1 clut_dat_r[2*CCW-1:1*CCW];
+      vid_mixer_b <= #1 clut_dat_r[1*CCW-1:0*CCW];
+    end
   end
 end
 
 
 //// output ////
-assign vid_active = lines_active;
-assign vid_hsync  = lines_hsync;
-assign vid_vsync  = lines_vsync;
-assign vid_r      = lines_r;
-assign vid_g      = lines_g;
-assign vid_b      = lines_b;
+assign vid_active = active_d[5];
+assign vid_hsync  = hsync_d[5];
+assign vid_vsync  = vsync_d[5];
+assign vid_r      = vid_mixer_r;
+assign vid_g      = vid_mixer_g;
+assign vid_b      = vid_mixer_b;
 
 
 endmodule
