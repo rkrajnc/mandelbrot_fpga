@@ -190,9 +190,9 @@ int main(int argc, char*argv[])
 
   // output stats
   printf("Mandelbrot set calculated with %d points & %d max iterations.\n", img_w*img_h, niter);
-  printf("X coords: %.8e  -  %.8e  -  %.8e\n", man_x0, man_cx, man_x1);
-  printf("Y coords: %.8e  -  %.8e  -  %.8e\n", man_y0, man_cy, man_y1);
-  printf("Zoom:     %.8e\n", man_zoom);
+  printf("X coords: % 2.8e  -  % 2.8e  -  % 2.8e\n", man_x0, man_cx, man_x1);
+  printf("Y coords: % 2.8e  -  % 2.8e  -  % 2.8e\n", man_y0, man_cy, man_y1);
+  printf("Zoom:     % 2.8e\n", man_zoom);
   printf("minimal iterations: %u\n", min_iterations);
   printf("maximal iterations: %u\n", max_iterations);
   printf("all iterations:     %lu\n", sum_iterations);
