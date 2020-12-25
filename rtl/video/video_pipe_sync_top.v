@@ -203,7 +203,7 @@ end
 
 //// video index ram ////
 // input sync signals start from clk 1, latency is 2
-localparam IRAM_MI = "";//"../../rtl/memory/vid_ram.hex";
+localparam IRAM_MI = "";//"../../roms/vid_ram.hex";
 localparam IMD = H_ACTIVE*V_ACTIVE;  // memory depth
 
 ram_generic_tp #(
