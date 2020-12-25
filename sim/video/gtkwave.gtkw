@@ -1,0 +1,143 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Dec 13 20:04:18 2020
+[*]
+[dumpfile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/video/out/video_pipe_sync_top/wav/waves.vcd"
+[dumpfile_mtime] "Sun Dec 13 19:19:57 2020"
+[dumpfile_size] 6510340
+[savefile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/video/gtkwave.gtkw"
+[timestart] 203000
+[size] 2560 1375
+[pos] -1 -1
+*-15.665617 191000 125190000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] video_pipe_sync_top_tb.
+[treeopen] video_pipe_sync_top_tb.DUT.
+[treeopen] video_pipe_sync_top_tb.DUT.video_text_console.
+[sst_width] 369
+[signals_width] 190
+[sst_expanded] 1
+[sst_vpaned_height] 756
+@28
+video_pipe_sync_top_tb.DUT.video_text_console.clk[0]
+video_pipe_sync_top_tb.DUT.video_text_console.clk_en[0]
+video_pipe_sync_top_tb.DUT.video_text_console.rst[0]
+@24
+video_pipe_sync_top_tb.DUT.video_sync_gen.h_cnt[11:0]
+video_pipe_sync_top_tb.DUT.video_text_console.v_cnt[11:0]
+@200
+-
+@24
+video_pipe_sync_top_tb.DUT.video_text_console.char_h_cnt[2:0]
+video_pipe_sync_top_tb.DUT.video_text_console.char_v_cnt[2:0]
+@200
+-
+@24
+video_pipe_sync_top_tb.DUT.video_text_console.con_adr_r[7:0]
+@c00024
+video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+@28
+(0)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+(1)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+(2)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+(3)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+(4)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+(5)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+(6)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+(7)video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+@1401200
+-group_end
+@200
+-
+@c00024
+video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+@28
+(0)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(1)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(2)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(3)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(4)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(5)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(6)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(7)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(8)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+(9)video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+@1401200
+-group_end
+@24
+video_pipe_sync_top_tb.DUT.video_text_console.font_dat_r[7:0]
+@28
+video_pipe_sync_top_tb.DUT.video_text_console.font_pixel[0]
+@200
+-
+@22
+video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_0[11:0]
+@c00022
+video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+@28
+(0)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(1)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(2)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(3)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(4)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(5)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(6)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(7)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(8)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(9)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(10)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+(11)video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+@1401200
+-group_end
+@24
+video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_0[11:0]
+@200
+-
+@28
+video_pipe_sync_top_tb.DUT.clut_active[0]
+video_pipe_sync_top_tb.DUT.lines[0]
+video_pipe_sync_top_tb.DUT.line_top[0]
+video_pipe_sync_top_tb.DUT.line_right[0]
+video_pipe_sync_top_tb.DUT.line_middle[0]
+@22
+video_pipe_sync_top_tb.DUT.clut_dat_r[23:0]
+@23
+video_pipe_sync_top_tb.DUT.con_r[7:0]
+@22
+video_pipe_sync_top_tb.DUT.con_g[7:0]
+video_pipe_sync_top_tb.DUT.con_b[7:0]
+video_pipe_sync_top_tb.DUT.lines_b[7:0]
+video_pipe_sync_top_tb.DUT.lines_r[7:0]
+video_pipe_sync_top_tb.DUT.lines_g[7:0]
+@24
+video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+@22
+video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_2[11:0]
+@28
+video_pipe_sync_top_tb.DUT.video_text_console.font_pixel[0]
+@24
+video_pipe_sync_top_tb.DUT.video_text_console.char_h_cnt[2:0]
+@22
+video_pipe_sync_top_tb.DUT.video_text_console.con_adr_r[7:0]
+video_pipe_sync_top_tb.DUT.video_text_console.con_dat_r[7:0]
+video_pipe_sync_top_tb.DUT.video_text_console.v_cnt_r_1[11:0]
+video_pipe_sync_top_tb.DUT.video_text_console.font_adr[9:0]
+video_pipe_sync_top_tb.DUT.video_text_console.font_dat_r[7:0]
+@c00024
+video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+@28
+(0)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(1)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(2)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(3)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(4)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(5)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(6)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(7)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(8)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(9)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(10)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+(11)video_pipe_sync_top_tb.DUT.video_text_console.h_cnt_r_2[11:0]
+@1401200
+-group_end
+[pattern_trace] 1
+[pattern_trace] 0

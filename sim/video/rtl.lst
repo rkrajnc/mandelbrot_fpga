@@ -1,0 +1,6 @@
+../../rtl/video/video_pipe_sync_top.v
+../../rtl/video/video_sync_gen.v
+../../rtl/video/video_text_console.v
+../../rtl/memory/rom_generic_sp.v
+../../rtl/memory/ram_generic_tp.v
+
