@@ -55,6 +55,7 @@ Compatibility:
 
 module AUDIO_IF(
 	//
+  enable,
 	reset_n,
 	sclk,
 	lrclk,
@@ -77,6 +78,7 @@ output 						lrclk;
 input 						reset_n;
 output	[3:0]				i2s;
 input 						clk;
+input             enable;
 
 parameter	DATA_WIDTH					=	16;
 parameter	SIN_SAMPLE_DATA			=	48;
@@ -149,7 +151,7 @@ always@(negedge lrclk or negedge reset_n)
 begin
 	if(!reset_n)
 	  SIN_Cont	<=	0;
-	else
+	else if (enable)
 	begin
 		if(SIN_Cont < SIN_SAMPLE_DATA-1 )
 		SIN_Cont	<=	SIN_Cont+1;
@@ -164,54 +166,54 @@ end
 always@(SIN_Cont)
 begin
 	case(SIN_Cont)
-    0  :   Data_Bit      <=      0       ;
-    1  :   Data_Bit      <=      4276    ;
-    2  :   Data_Bit      <=      8480    ;
-    3  :   Data_Bit      <=      12539   ;
-    4  :   Data_Bit      <=      16383   ;
-    5  :   Data_Bit      <=      19947   ;
-    6  :   Data_Bit      <=      23169   ;
-    7  :   Data_Bit      <=      25995   ;
-    8  :   Data_Bit      <=      28377   ;
-    9  :   Data_Bit      <=      30272   ;
-    10  :  Data_Bit      <=      31650   ;
-    11  :  Data_Bit      <=      32486   ;
-    12  :  Data_Bit      <=      32767   ;
-    13  :  Data_Bit      <=      32486   ;
-    14  :  Data_Bit      <=      31650   ;
-    15  :  Data_Bit      <=      30272   ;
-    16  :  Data_Bit      <=      28377   ;
-    17  :  Data_Bit      <=      25995   ;
-    18  :  Data_Bit      <=      23169   ;
-    19  :  Data_Bit      <=      19947   ;
-    20  :  Data_Bit      <=      16383   ;
-    21  :  Data_Bit      <=      12539   ;
-    22  :  Data_Bit      <=      8480    ;
-    23  :  Data_Bit      <=      4276    ;
-    24  :  Data_Bit      <=      0       ;
-    25  :  Data_Bit      <=      61259   ;
-    26  :  Data_Bit      <=      57056   ;
-    27  :  Data_Bit      <=      52997   ;
-    28  :  Data_Bit      <=      49153   ;
-    29  :  Data_Bit      <=      45589   ;
-    30  :  Data_Bit      <=      42366   ;
-    31  :  Data_Bit      <=      39540   ;
-    32  :  Data_Bit      <=      37159   ;
-    33  :  Data_Bit      <=      35263   ;
-    34  :  Data_Bit      <=      33885   ;
-    35  :  Data_Bit      <=      33049   ;
-    36  :  Data_Bit      <=      32768   ;
-    37  :  Data_Bit      <=      33049   ;
-    38  :  Data_Bit      <=      33885   ;
-    39  :  Data_Bit      <=      35263   ;
-    40  :  Data_Bit      <=      37159   ;
-    41  :  Data_Bit      <=      39540   ;
-    42  :  Data_Bit      <=      42366   ;
-    43  :  Data_Bit      <=      45589   ;
-    44  :  Data_Bit      <=      49152   ;
-    45  :  Data_Bit      <=      52997   ;
-    46  :  Data_Bit      <=      57056   ;
-    47  :  Data_Bit      <=      61259   ;
+    0  :   Data_Bit      <=   0    ;
+    1  :   Data_Bit      <=   4    ;
+    2  :   Data_Bit      <=   8    ;
+    3  :   Data_Bit      <=   12   ;
+    4  :   Data_Bit      <=   16   ;
+    5  :   Data_Bit      <=   19   ;
+    6  :   Data_Bit      <=   23   ;
+    7  :   Data_Bit      <=   25   ;
+    8  :   Data_Bit      <=   28   ;
+    9  :   Data_Bit      <=   30   ;
+    10  :  Data_Bit      <=   31   ;
+    11  :  Data_Bit      <=   32   ;
+    12  :  Data_Bit      <=   32   ;
+    13  :  Data_Bit      <=   32   ;
+    14  :  Data_Bit      <=   31   ;
+    15  :  Data_Bit      <=   30   ;
+    16  :  Data_Bit      <=   28   ;
+    17  :  Data_Bit      <=   25   ;
+    18  :  Data_Bit      <=   23   ;
+    19  :  Data_Bit      <=   19   ;
+    20  :  Data_Bit      <=   16   ;
+    21  :  Data_Bit      <=   12   ;
+    22  :  Data_Bit      <=   8    ;
+    23  :  Data_Bit      <=   4    ;
+    24  :  Data_Bit      <=   0    ;
+    25  :  Data_Bit      <=   61   ;
+    26  :  Data_Bit      <=   57   ;
+    27  :  Data_Bit      <=   52   ;
+    28  :  Data_Bit      <=   49   ;
+    29  :  Data_Bit      <=   45   ;
+    30  :  Data_Bit      <=   42   ;
+    31  :  Data_Bit      <=   39   ;
+    32  :  Data_Bit      <=   37   ;
+    33  :  Data_Bit      <=   35   ;
+    34  :  Data_Bit      <=   33   ;
+    35  :  Data_Bit      <=   33   ;
+    36  :  Data_Bit      <=   32   ;
+    37  :  Data_Bit      <=   33   ;
+    38  :  Data_Bit      <=   33   ;
+    39  :  Data_Bit      <=   35   ;
+    40  :  Data_Bit      <=   37   ;
+    41  :  Data_Bit      <=   39   ;
+    42  :  Data_Bit      <=   42   ;
+    43  :  Data_Bit      <=   45   ;
+    44  :  Data_Bit      <=   49   ;
+    45  :  Data_Bit      <=   52   ;
+    46  :  Data_Bit      <=   57   ;
+    47  :  Data_Bit      <=   61   ;
 	default	:
 		   Data_Bit		<=		0		;
 	endcase
