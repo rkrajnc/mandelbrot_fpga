@@ -1,0 +1,10 @@
+../../rtl/top/mandelbrot_fpga_top.sv
+../../rtl/mandelbrot/mandelbrot_coords.v
+../../rtl/mandelbrot/mandelbrot_calc.v
+../../rtl/fifo/sync_fifo.v
+../../rtl/video/video_pipe_sync_top.v
+../../rtl/video/video_sync_gen.v
+../../rtl/video/video_text_console.v
+../../rtl/memory/rom_generic_sp.v
+../../rtl/memory/ram_generic_tp.v
+

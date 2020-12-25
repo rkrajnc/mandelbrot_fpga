@@ -1,0 +1,61 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu Dec 24 12:45:49 2020
+[*]
+[dumpfile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/top/out/mandelbrot_top/wav/waves.vcd"
+[dumpfile_mtime] "Thu Dec 24 12:38:38 2020"
+[dumpfile_size] 1073757522
+[savefile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/top/gtkwave.gtkw"
+[timestart] 740794707400
+[size] 2560 1291
+[pos] -1 -1
+*-16.000000 740794978300 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mandelbrot_top_tb.
+[treeopen] mandelbrot_top_tb.DUT.
+[treeopen] mandelbrot_top_tb.DUT.video_pipe.
+[sst_width] 207
+[signals_width] 158
+[sst_expanded] 1
+[sst_vpaned_height] 392
+@28
+mandelbrot_top_tb.clk[0]
+mandelbrot_top_tb.rst[0]
+mandelbrot_top_tb.DUT.man_coord_rdy[0]
+mandelbrot_top_tb.DUT.man_coord_vld[0]
+@40000420
+[fpshift_count] 22
+mandelbrot_top_tb.DUT.man_x[26:0]
+[fpshift_count] 22
+mandelbrot_top_tb.DUT.man_y[26:0]
+@22
+mandelbrot_top_tb.DUT.man_adr[18:0]
+@28
+mandelbrot_top_tb.DUT.man_out_vld[0]
+mandelbrot_top_tb.DUT.man_out_rdy[0]
+@22
+mandelbrot_top_tb.DUT.vram_adr_w[18:0]
+mandelbrot_top_tb.DUT.vram_dat_w[7:0]
+@28
+mandelbrot_top_tb.DUT.fifo_en[0]
+mandelbrot_top_tb.DUT.fifo_full[0]
+mandelbrot_top_tb.DUT.fifo_empty[0]
+mandelbrot_top_tb.DUT.fifo_wr_en[0]
+mandelbrot_top_tb.DUT.fifo_rd_en[0]
+@200
+-
+@28
+mandelbrot_top_tb.DUT.mandelbrot_fifo.cnt[2:0]
+mandelbrot_top_tb.DUT.mandelbrot_fifo.wp[1:0]
+mandelbrot_top_tb.DUT.mandelbrot_fifo.rp[1:0]
+@22
+mandelbrot_top_tb.DUT.video_pipe.video_index_ram.adr_w[18:0]
+mandelbrot_top_tb.DUT.video_pipe.video_index_ram.dat_w[7:0]
+@28
+mandelbrot_top_tb.DUT.video_pipe.video_index_ram.we[0]
+mandelbrot_top_tb.DUT.video_pipe.video_index_ram.we[0]
+@25
+mandelbrot_top_tb.DUT.video_pipe.video_index_ram.adr_w[18:0]
+@24
+mandelbrot_top_tb.DUT.video_pipe.video_index_ram.dat_w[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
