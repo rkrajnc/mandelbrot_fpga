@@ -1,0 +1,65 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed Dec 23 21:20:33 2020
+[*]
+[dumpfile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/mandelbrot/out/mandelbrot_calc/wav/waves.vcd"
+[dumpfile_mtime] "Sun Dec 20 23:38:21 2020"
+[dumpfile_size] 2740
+[savefile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/mandelbrot/gtkwave.gtkw"
+[timestart] 327500
+[size] 2560 1291
+[pos] -1 -1
+*-15.000000 450000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mandelbrot_calc_tb.
+[sst_width] 211
+[signals_width] 174
+[sst_expanded] 1
+[sst_vpaned_height] 381
+@28
+mandelbrot_calc_tb.DUT.clk[0]
+mandelbrot_calc_tb.DUT.rst[0]
+@200
+-
+@28
+mandelbrot_calc_tb.DUT.in_vld[0]
+mandelbrot_calc_tb.DUT.in_rdy[0]
+@40000420
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.x_man[26:0]
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.y_man[26:0]
+@200
+-
+@40000420
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.x[26:0]
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.y[26:0]
+@200
+-
+@40000420
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.xx[26:0]
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.yy[26:0]
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.xy2[26:0]
+@200
+-
+@23
+mandelbrot_calc_tb.DUT.niters[8:0]
+@28
+mandelbrot_calc_tb.DUT.niters_check[0]
+@40000420
+[fpshift_count] 22
+mandelbrot_calc_tb.DUT.limit[26:0]
+@28
+mandelbrot_calc_tb.DUT.limit_check[0]
+mandelbrot_calc_tb.DUT.check[0]
+@200
+-
+@28
+mandelbrot_calc_tb.DUT.out_vld[0]
+mandelbrot_calc_tb.DUT.out_rdy[0]
+[pattern_trace] 1
+[pattern_trace] 0
