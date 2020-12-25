@@ -87,7 +87,7 @@ reset #(
   .RCV    (RCV)   // counter max value, min 1
 ) sys_reset (
   .clk      ({vga_clk,         aud_clk,         sys_clk,         man_clk}),
-  .rst_in   ({!vga_pll_locked, !sys_pll_locked, !sys_pll_locked, !sys_pll_locked}),
+  .rst_in   (!vga_pll_locked || !sys_pll_locked),
   .rst_out  ({vga_rst,         aud_rst,         sys_rst,         man_rst})
 );
 
@@ -111,9 +111,12 @@ assign LED[0] = blinky_out;
 
 
 //// HDMI audio ////
+localparam DISABLE_AUDIO = 1;
+
 AUDIO_IF hdmi_audio (
   .clk      (aud_clk),
   .reset_n  (!aud_rst),
+  .enable   (!DISABLE_AUDIO),
   .sclk     (HDMI_SCLK),
   .lrclk    (HDMI_LRCLK),
   .i2s      (HDMI_I2S)
