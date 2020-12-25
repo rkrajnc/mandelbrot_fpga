@@ -1,16 +1,21 @@
-TARGET=mandelbrot_simple
+TARGET1=mandelbrot_simple
+TARGET2=mandelbrot_fp
 
 CC=gcc
 CFLAGS=-Wall -O3 -fopenmp
 
 .PHONY: all
-all: $(TARGET)
+all: $(TARGET1) $(TARGET2)
 
-$(TARGET): $(TARGET).c Makefile
+$(TARGET1): $(TARGET1).c Makefile
+	@$(CC) $(CFLAGS) $< -o $@
+
+$(TARGET2): $(TARGET2).c Makefile
 	@$(CC) $(CFLAGS) $< -o $@
 
 .PHONY: clean
 clean:
-	@rm -f $(TARGET)
+	@rm -f $(TARGET1)
+	@rm -f $(TARGET2)
 	@rm -f mandelbrot.ppm
 
