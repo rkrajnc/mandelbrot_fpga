@@ -59,59 +59,35 @@ localparam FDW      = IMAW+IMDW;        // fifo data width
 
 
 //// mandelbrot engine ////
-wire man_init;
-wire man_coord_rdy;
-wire man_coord_vld;
-wire [FPW-1:0] man_x;
-wire [FPW-1:0] man_y;
-wire [IMAW-1:0] man_adr;
+wire            man_init;
+wire            man_out_vld;
+wire            man_out_rdy;
+wire [ MIW-1:0] niter;
+wire [IMAW-1:0] adr_o;
 
 assign man_init = 1'b0;
 
-mandelbrot_coords #(
-  .VMINX  (0    ),  // screen min x coordinate
-  .VMAXX  (VHR-1),  // screen max x coordinate
-  .VMINY  (0    ),  // screen min y coordinate
-  .VMAXY  (VVR-1),  // screen max y coordinate
-  .CW     (12   ),  // screen counter width
-  .AW     (IMAW ),  // address width
-  .FPW    (FPW  )   // fixed point size
-) mandelbrot_coords (
+mandelbrot_top #(
+  .FPW      (FPW      ),  // bitwidth of fixed-point numbers
+  .MAXITERS (MAXITERS ),  // max number of iterations
+  .IW       (MIW      ),  // width of iteration vars
+  .AW       (IMAW     ),  // address width
+  .CW       (12       ),  // screen counter width (TODO)
+  .FD       (8        ),  // fifo depth (TODO)
+  .VMINX    (0        ),  // screen min x coordinate
+  .VMAXX    (VHR-1    ),  // screen max x coordinate
+  .VMINY    (0        ),  // screen min y coordinate
+  .VMAXY    (VVR-1    )   // screen max y coordinate
+) mandelbrot_top (
   .clk      (vga_clk      ),
   .clk_en   (vga_clk_en   ),
   .rst      (vga_rst      ),
-  .init     (man_init     ),
-  .out_rdy  (man_coord_rdy),
-  .out_vld  (man_coord_vld),
-  .x        (man_x        ),
-  .y        (man_y        ),
-  .adr      (man_adr      )
-);
-
-
-wire man_out_vld;
-wire man_out_rdy;
-wire [MIW-1:0] niter;
-wire [IMAW-1:0] adr_o;
-
-mandelbrot_calc #(
-  .MAXITERS (MAXITERS), // max number of iterations
-  .IW       (MIW),      // width of iteration vars
-  .FPW      (FPW),      // bitwidth of fixed-point numbers
-  .AW       (IMAW)      // address width
-) mandelbrot_calc (
-  .clk      (vga_clk      ),      // clock
-  .clk_en   (vga_clk_en   ),   // clock enable
-  .rst      (vga_rst      ),      // reset
-  .in_vld   (man_coord_vld),   // input valid
-  .in_rdy   (man_coord_rdy),   // input ack
-  .x_man    (man_x        ),    // mandelbrot x coordinate
-  .y_man    (man_y        ),    // mandelbrot y cooridnate
-  .adr_i    (man_adr      ),    // mandelbrot coordinate address input
-  .out_vld  (man_out_vld  ),  // output valid
-  .out_rdy  (man_out_rdy  ),  // output ack
-  .niter    (niter        ),    // number of iterations
-  .adr_o    (adr_o        )     // mandelbrot coordinate address output
+  .en       (man_init     ),
+  .done     (             ),
+  .out_vld  (man_out_vld  ),
+  .out_rdy  (man_out_rdy  ),
+  .out_dat  (niter        ),
+  .out_adr  (adr_o        )
 );
 
 
