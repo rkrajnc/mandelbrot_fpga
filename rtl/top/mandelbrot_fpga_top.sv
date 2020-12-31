@@ -54,7 +54,7 @@ localparam MIW      = $clog2(MAXITERS); // width of iteration vars
 localparam FPW      = 1*27;             // width of fixed-point numbers
 
 // fifo
-localparam FD       = 4;                // fifo depth
+localparam FD       = 8;                // fifo depth
 localparam FDW      = IMAW+IMDW;        // fifo data width
 
 
@@ -79,9 +79,9 @@ mandelbrot_top #(
   .VMINY    (0        ),  // screen min y coordinate
   .VMAXY    (VVR-1    )   // screen max y coordinate
 ) mandelbrot_top (
-  .clk      (vga_clk      ),
-  .clk_en   (vga_clk_en   ),
-  .rst      (vga_rst      ),
+  .clk      (man_clk      ),
+  .clk_en   (man_clk_en   ),
+  .rst      (man_rst      ),
   .en       (man_init     ),
   .done     (             ),
   .out_vld  (man_out_vld  ),
@@ -108,21 +108,23 @@ assign fifo_wr_en   = man_out_vld && !fifo_full;
 assign man_out_rdy  = !fifo_full;
 assign fifo_rd_en   = !fifo_empty;
 
-sync_fifo #(
-  .FD   (FD),   // fifo depth
-  .DW   (FDW)   // data width
+async_fifo #(
+  .DW   (FDW),  // fifo width
+  .FD   (FD)    // fifo depth
 ) mandelbrot_fifo (
-  .clk      (vga_clk     ), // clock
-  .clk_en   (vga_clk_en  ), // clock enable
-  .rst      (vga_rst     ), // reset
-  .en       (fifo_en     ), // enable (if !en, reset fifo)
-  .in       (fifo_in     ), // write data
-  .out      (fifo_out    ), // read data
-  .wr_en    (fifo_wr_en  ), // fifo write enable
-  .rd_en    (fifo_rd_en  ), // fifo read enable
-  .full     (fifo_full   ), // fifo full
-  .empty    (fifo_empty  ), // fifo empty
-  .half     (            )  // fifo is less than half full
+  .in_clk       (man_clk    ),
+  .in_clk_en    (man_clk_en ),
+  .in_rst       (man_rst    ),
+  .wr_en        (fifo_wr_en ),
+  .in           (fifo_in    ),
+  .out_clk      (vga_clk    ),
+  .out_clk_en   (vga_clk_en ),
+  .out_rst      (vga_rst    ),
+  .rd_en        (fifo_rd_en ),
+  .out          (fifo_out   ),
+  .empty        (fifo_empty ),
+  .full         (fifo_full  ),
+  .half         ()
 );
 
 
