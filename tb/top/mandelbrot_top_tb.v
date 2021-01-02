@@ -6,6 +6,8 @@
 `timescale 1ns/10ps
 `default_nettype none
 
+`define SOC_SIM
+
 
 module mandelbrot_top_tb();
 
@@ -73,8 +75,12 @@ initial begin
   wait(!rst);
   repeat(10) @ (posedge clk); #1;
 
-  // wait for endf of mandelbrot calc
-  wait(!DUT.mandelbrot_coords.cnt_en);
+  // wait for start of mandelbrot calc
+  wait(DUT.mandelbrot_top.mandelbrot_coords.cnt_en);
+  repeat(10) @ (posedge clk); #1;
+
+  // wait for end of mandelbrot calc
+  wait(!DUT.mandelbrot_top.mandelbrot_coords.cnt_en);
   repeat(10) @ (posedge clk); #1;
 
   // enable video pipe and frame grabber
@@ -89,6 +95,9 @@ initial begin
   // wait for another frame
   repeat (10) @ (posedge clk); #1;
   wait(pixel_counter == WIDTH*HEIGHT);
+
+  // TODO WAIT
+  repeat (1000) @ (posedge clk); #1;
 
   // done
   repeat(10) @ (posedge clk); #1;
@@ -149,7 +158,6 @@ video_frame_writter #(
     initial begin
       $dumpfile(`WAV_FILE);
       $dumpvars(0, mandelbrot_top_tb);
-      //$dumpvars(SRC_CLK_PERIOD, clock_frequency_check_tb);
     end
   `endif
 `endif
