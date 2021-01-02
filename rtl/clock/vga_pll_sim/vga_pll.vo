@@ -226,7 +226,7 @@ module  vga_pll
 		vga_pll_altera_pll_altera_pll_i_639.n_cnt_odd_div_duty_en = "false",
 		vga_pll_altera_pll_altera_pll_i_639.number_of_clocks = 1,
 		vga_pll_altera_pll_altera_pll_i_639.operation_mode = "normal",
-		vga_pll_altera_pll_altera_pll_i_639.output_clock_frequency0 = "25.175644 MHz",
+		vga_pll_altera_pll_altera_pll_i_639.output_clock_frequency0 = "40.000000 MHz",
 		vga_pll_altera_pll_altera_pll_i_639.output_clock_frequency1 = "0 MHz",
 		vga_pll_altera_pll_altera_pll_i_639.output_clock_frequency10 = "0 MHz",
 		vga_pll_altera_pll_altera_pll_i_639.output_clock_frequency11 = "0 MHz",
