@@ -59,7 +59,8 @@ sys_pll sys_clock (
 
 
 //// video clock ////
-localparam VGA_CLK = 25175644;
+//localparam VGA_CLK = 25175644;
+localparam VGA_CLK = 40000000;
 
 wire vga_clk_en = 1'b1;
 wire vga_clk;
