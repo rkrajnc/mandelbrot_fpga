@@ -49,18 +49,10 @@ module video_pipe_sync_top #(
 localparam HCW        = 12;   // horizontal counter width
 localparam VCW        = 12;   // vertical counter width
 localparam F_CNT      = 60;   // number of frames in a second
-localparam H_POL      = 1;    // horizontal sync polarity (0=positive, 1=negative)
-localparam H_SYNC     = 96;   // sync pulse width in pixels
-localparam H_BACK     = 45+3; // back porch width in pixels + added 3 pixels for active 'border'
-localparam H_ACTIVE   = 640;  // active time width in pixels, actual width is 646px with border
-localparam H_FRONT    = 13+3; // front porch width in pixels + added 3 pixels for active 'border'
-localparam H_WHOLE    = 800;  // whole line width in pixels
-localparam V_POL      = 1;    // vertical sync polarity ((0=positive, 1=negative)
-localparam V_SYNC     = 2;    // sync pulse width in lines
-localparam V_BACK     = 31+2; // back porch width in lines + added 2 lines for active 'border'
-localparam V_ACTIVE   = 480;  // active time width in lines, acutal width is 484px with border
-localparam V_FRONT    = 8+2;  // front porch width in lines + added 2 lines for active 'border'
-localparam V_WHOLE    = 525;  // whole frame width in lines
+//localparam H_ACTIVE   = 640; // TODO!!
+//localparam V_ACTIVE   = 480;
+localparam H_ACTIVE   = 800; // TODO!!
+localparam V_ACTIVE   = 600;
 
 
 //// video sync generator ////
@@ -74,40 +66,60 @@ wire            a_start;
 wire            a_end;
 wire            hsync;
 wire            vsync;
+//wire            cfg_h_pol     = 'd1;    // horizontal sync polarity (0=positive, 1=negative)
+//wire [ HCW-1:0] cfg_h_sync    = 'd96;   // sync pulse width in pixels
+//wire [ HCW-1:0] cfg_h_active  = 'd640;  // active time width in pixels, actual width is 646px with border
+//wire [ HCW-1:0] cfg_h_front   = 'd16;   // front porch width in pixels + added 3 pixels for active 'border'
+//wire [ HCW-1:0] cfg_h_whole   = 'd800;  // whole line width in pixels
+//wire            cfg_v_pol     = 'd1;    // vertical sync polarity ((0=positive, 1=negative)
+//wire [ VCW-1:0] cfg_v_sync    = 'd2;    // sync pulse width in lines
+//wire [ VCW-1:0] cfg_v_active  = 'd480;  // active time width in lines, acutal width is 484px with border
+//wire [ VCW-1:0] cfg_v_front   = 'd10;   // front porch width in lines + added 2 lines for active 'border'
+//wire [ VCW-1:0] cfg_v_whole   = 'd525;  // whole frame width in lines
+wire            cfg_h_pol     = 'd0;      // horizontal sync polarity (0=positive, 1=negative)
+wire [ HCW-1:0] cfg_h_sync    = 'd128;    // sync pulse width in pixels
+wire [ HCW-1:0] cfg_h_active  = 'd800;    // active time width in pixels, actual width is 646px with border
+wire [ HCW-1:0] cfg_h_front   = 'd40;     // front porch width in pixels + added 3 pixels for active 'border'
+wire [ HCW-1:0] cfg_h_whole   = 'd1056;   // whole line width in pixels
+wire            cfg_v_pol     = 'd0;      // vertical sync polarity ((0=positive, 1=negative)
+wire [ VCW-1:0] cfg_v_sync    = 'd4;      // sync pulse width in lines
+wire [ VCW-1:0] cfg_v_active  = 'd600;    // active time width in lines, acutal width is 484px with border
+wire [ VCW-1:0] cfg_v_front   = 'd1;      // front porch width in lines + added 2 lines for active 'border'
+wire [ VCW-1:0] cfg_v_whole   = 'd628;    // whole frame width in lines
+
+
 
 video_sync_gen #(
   .HCW        (HCW      ),  // horizontal counter width
   .VCW        (VCW      ),  // vertical counter width
-  .F_CNT      (F_CNT    ),  // number of frames in a second
-  .H_POL      (H_POL    ),  // horizontal sync polarity (0=positive, 1=negative)
-  .H_SYNC     (H_SYNC   ),  // sync pulse width in pixels
-  .H_BACK     (H_BACK   ),  // back porch width in pixels + added 3 pixels for active 'border'
-  .H_ACTIVE   (H_ACTIVE ),  // active time width in pixels, actual width is 646px with border
-  .H_FRONT    (H_FRONT  ),  // front porch width in pixels + added 3 pixels for active 'border'
-  .H_WHOLE    (H_WHOLE  ),  // whole line width in pixels
-  .V_POL      (V_POL    ),  // vertical sync polarity ((0=positive, 1=negative)
-  .V_SYNC     (V_SYNC   ),  // sync pulse width in lines
-  .V_BACK     (V_BACK   ),  // back porch width in lines + added 2 lines for active 'border'
-  .V_ACTIVE   (V_ACTIVE ),  // active time width in lines, acutal width is 484px with border
-  .V_FRONT    (V_FRONT  ),  // front porch width in lines + added 2 lines for active 'border'
-  .V_WHOLE    (V_WHOLE  )   // whole frame width in lines
+  .F_CNT      (F_CNT    )   // number of frames in a second
 ) video_sync_gen (
-  .clk        (clk    ),  // clock
-  .clk_en     (clk_en ),  // clock enable
-  .rst        (rst    ),  // reset
-  .en         (en     ),  // enable counters
-  .h_match    (h_match),  // horizontal counter match compare value
-  .v_match    (v_match),  // vertical counter match compare value
-  .h_cnt      (h_cnt  ),  // horizontal counter
-  .v_cnt      (v_cnt  ),  // vertical counter
-  .cnt_match  (       ),  // position match
-  .active     (active ),  // active output (otherwise border)
-  .blank      (blank  ),  // blank output (otherwise active)
-  .a_start    (a_start),  // active start (x==0 && y==0)
-  .a_end      (a_end  ),  // active end ((x==H_ACTIVE-1 && y==V_ACTIVE-1)
-  .f_cnt      (       ),  // frame counter (resets for every second)
-  .h_sync     (hsync  ),  // horizontal sync signal
-  .v_sync     (vsync  )   // vertical sync signal
+  .clk          (clk          ),  // clock
+  .clk_en       (clk_en       ),  // clock enable
+  .rst          (rst          ),  // reset
+  .en           (en           ),  // enable counters
+  .h_match      (h_match      ),  // horizontal counter match compare value
+  .v_match      (v_match      ),  // vertical counter match compare value
+  .cfg_h_pol    (cfg_h_pol    ),  // horizontal sync polarity (0=positive, 1=negative)
+  .cfg_h_sync   (cfg_h_sync   ),  // sync pulse width in pixels
+  .cfg_h_active (cfg_h_active ),  // active time width in pixels, actual width is 646px with border
+  .cfg_h_front  (cfg_h_front  ),  // front porch width in pixels + added 3 pixels for active 'border'
+  .cfg_h_whole  (cfg_h_whole  ),  // whole line width in pixels
+  .cfg_v_pol    (cfg_v_pol    ),  // vertical sync polarity ((0=positive, 1=negative)
+  .cfg_v_sync   (cfg_v_sync   ),  // sync pulse width in lines
+  .cfg_v_active (cfg_v_active ),  // active time width in lines, acutal width is 484px with border
+  .cfg_v_front  (cfg_v_front  ),  // front porch width in lines + added 2 lines for active 'border'
+  .cfg_v_whole  (cfg_v_whole  ),  // whole frame width in lines
+  .h_cnt        (h_cnt        ),  // horizontal counter
+  .v_cnt        (v_cnt        ),  // vertical counter
+  .cnt_match    (             ),  // position match
+  .active       (active       ),  // active output (otherwise border)
+  .blank        (blank        ),  // blank output (otherwise active)
+  .a_start      (a_start      ),  // active start (x==0 && y==0)
+  .a_end        (a_end        ),  // active end ((x==H_ACTIVE-1 && y==V_ACTIVE-1)
+  .f_cnt        (             ),  // frame counter (resets for every second)
+  .h_sync       (hsync        ),  // horizontal sync signal
+  .v_sync       (vsync        )   // vertical sync signal
 );
 
 
