@@ -30,8 +30,8 @@ module mandelbrot_fpga_top #(
 // video
 localparam NCOLORS  = 256;              // number of colors
 localparam CCW      = $clog2(NCOLORS);  // color component width
-localparam VHR      = 640;              // video horizontal resolution
-localparam VVR      = 480;              // video vertical resolution
+localparam VHR      = 800;              // video horizontal resolution
+localparam VVR      = 600;              // video vertical resolution
 localparam NPIXELS  = VHR*VVR;          // number of pixels
 
 // console
@@ -51,21 +51,49 @@ localparam IMDW     = 8;                // video index memory data width
 // mandelbrot
 localparam MAXITERS = 256;              // max number of iterations
 localparam MIW      = $clog2(MAXITERS); // width of iteration vars
-localparam FPW      = 1*27;             // width of fixed-point numbers
+localparam FPW      = 2*27;             // width of fixed-point numbers
 
 // fifo
 localparam FD       = 8;                // fifo depth
 localparam FDW      = IMAW+IMDW;        // fifo data width
 
 
+//// control ////
+wire            man_init; // Mandebrot engine start
+wire            man_done; // Mandelbrot engine done
+wire [ FPW-1:0] man_x0;   // leftmost Mandelbrot coordinate
+wire [ FPW-1:0] man_y0;   // uppermost Mandelbrot coordinate
+wire [ FPW-1:0] man_xs;   // Mandelbrot x step
+wire [ FPW-1:0] man_ys;   // Mandelbrot y step
+
+ctrl_top #(
+  .MI ("../../roms/ctrl_boot.hex"),
+  .FPW  (FPW)
+) ctrl_top (
+  .clk        (sys_clk  ),
+  .rst        (sys_rst  ),
+  .man_init   (man_init ),
+  .man_done   (man_done ),
+  .man_x0     (man_x0   ),
+  .man_y0     (man_y0   ),
+  .man_xs     (man_xs   ),
+  .man_ys     (man_ys   )
+);
+
+
 //// mandelbrot engine ////
-wire            man_init;
+reg  [   2-1:0] man_init_r;
 wire            man_out_vld;
 wire            man_out_rdy;
 wire [ MIW-1:0] niter;
 wire [IMAW-1:0] adr_o;
 
-assign man_init = 1'b0;
+always @ (posedge man_clk, posedge man_rst) begin
+  if (man_rst)
+    man_init_r <= #1 2'b00;
+  else if (man_clk_en)
+    man_init_r <= #1 {man_init_r[0], man_init};
+end
 
 mandelbrot_top #(
   .FPW      (FPW      ),  // bitwidth of fixed-point numbers
@@ -73,27 +101,25 @@ mandelbrot_top #(
   .IW       (MIW      ),  // width of iteration vars
   .AW       (IMAW     ),  // address width
   .CW       (12       ),  // screen counter width (TODO)
-  .FD       (8        ),  // fifo depth (TODO)
-  .VMINX    (0        ),  // screen min x coordinate
-  .VMAXX    (VHR-1    ),  // screen max x coordinate
-  .VMINY    (0        ),  // screen min y coordinate
-  .VMAXY    (VVR-1    )   // screen max y coordinate
+  .FD       (8        )   // fifo depth (TODO)
 ) mandelbrot_top (
-  .clk      (man_clk      ),
-  .clk_en   (man_clk_en   ),
-  .rst      (man_rst      ),
-  .en       (man_init     ),
-  .done     (             ),
-  .out_vld  (man_out_vld  ),
-  .out_rdy  (man_out_rdy  ),
-  .out_dat  (niter        ),
-  .out_adr  (adr_o        )
+  .clk      (man_clk      ),  // clock
+  .clk_en   (man_clk_en   ),  // clock enable
+  .rst      (man_rst      ),  // reset
+  .init     (man_init_r[1]),  // enable mandelbrot calculation (posedge sensitive!)
+  .done     (man_done     ),  // mandelbrot engine done
+  .man_x0   (man_x0       ),  // leftmost Mandelbrot coordinate
+  .man_y0   (man_y0       ),  // uppermost Mandelbrot coordinate
+  .man_xs   (man_xs       ),  // Mandelbrot x step
+  .man_ys   (man_ys       ),  // Mandelbrot y step
+  .out_vld  (man_out_vld  ),  // output valid
+  .out_rdy  (man_out_rdy  ),  // output ready to receive (ack)
+  .out_dat  (niter        ),  // number of iterations
+  .out_adr  (adr_o        )   // mandelbrot coordinate address output
 );
 
 
 //// results async fifo ////
-// TODO - mandelbrot engine is on man_clk, need async fifo here!
-
 wire fifo_en;
 wire [FDW-1:0] fifo_in;
 wire [FDW-1:0] fifo_out;
