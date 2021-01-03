@@ -32,6 +32,7 @@ localparam NCOLORS  = 256;              // number of colors
 localparam CCW      = $clog2(NCOLORS);  // color component width
 localparam VHR      = 800;              // video horizontal resolution
 localparam VVR      = 600;              // video vertical resolution
+localparam CW       = 12;               // pixel counters width
 localparam NPIXELS  = VHR*VVR;          // number of pixels
 
 // console
@@ -52,9 +53,10 @@ localparam IMDW     = 8;                // video index memory data width
 localparam MAXITERS = 256;              // max number of iterations
 localparam MIW      = $clog2(MAXITERS); // width of iteration vars
 localparam FPW      = 2*27;             // width of fixed-point numbers
+localparam MFD      = 16;               // mandelbrot fifo depth
 
-// fifo
-localparam FD       = 8;                // fifo depth
+// video fifo
+localparam VFD      = 32;               // video fifo depth
 localparam FDW      = IMAW+IMDW;        // fifo data width
 
 
@@ -100,8 +102,8 @@ mandelbrot_top #(
   .MAXITERS (MAXITERS ),  // max number of iterations
   .IW       (MIW      ),  // width of iteration vars
   .AW       (IMAW     ),  // address width
-  .CW       (12       ),  // screen counter width (TODO)
-  .FD       (8        )   // fifo depth (TODO)
+  .CW       (CW       ),  // screen counter width
+  .FD       (MFD      )   // fifo depth
 ) mandelbrot_top (
   .clk      (man_clk      ),  // clock
   .clk_en   (man_clk_en   ),  // clock enable
@@ -119,7 +121,7 @@ mandelbrot_top #(
 );
 
 
-//// results async fifo ////
+//// video async fifo ////
 wire fifo_en;
 wire [FDW-1:0] fifo_in;
 wire [FDW-1:0] fifo_out;
@@ -136,8 +138,8 @@ assign fifo_rd_en   = !fifo_empty;
 
 async_fifo #(
   .DW   (FDW),  // fifo width
-  .FD   (FD)    // fifo depth
-) mandelbrot_fifo (
+  .FD   (VFD)   // fifo depth
+) video_fifo (
   .in_clk       (man_clk    ),
   .in_clk_en    (man_clk_en ),
   .in_rst       (man_rst    ),
@@ -170,16 +172,20 @@ assign vram_adr_w     = fifo_out[IMAW+IMDW-1:IMDW];
 assign vram_dat_w     = fifo_out[IMDW-1:0];
 
 video_pipe_sync_top #(
-  .CCW      (CCW ), // color component width
-  .TW       (TW  ), // console text width in characters
-  .TH       (TH  ), // console text height in characters
-  .CMAW     (CMAW), // console memory address width
-  .CMDW     (CMDW), // console memory data width
-  .IMAW     (IMAW), // index memory address width
-  .IMDW     (IMDW), // index memory data width
-  .CFR      (CFR ), // console text foreground color red value
-  .CFG      (CFG ), // console text foreground color green value
-  .CFB      (CFB )  // console text foreground color blue value
+  .CCW      (CCW  ),  // color component width
+  .HCW      (CW   ),  // horizontal counter width
+  .VCW      (CW   ),  // vertical counter width
+  .H_ACTIVE (VHR  ),  // horizontal resolution
+  .V_ACTIVE (VVR  ),  // vertical resolution
+  .TW       (TW   ),  // console text width in characters
+  .TH       (TH   ),  // console text height in characters
+  .CMAW     (CMAW ),  // console memory address width
+  .CMDW     (CMDW ),  // console memory data width
+  .IMAW     (IMAW ),  // index memory address width
+  .IMDW     (IMDW ),  // index memory data width
+  .CFR      (CFR  ),  // console text foreground color red value
+  .CFG      (CFG  ),  // console text foreground color green value
+  .CFB      (CFB  )   // console text foreground color blue value
 ) video_pipe (
   .clk            (vga_clk        ),  // video clock
   .clk_en         (vga_clk_en     ),  // video clock enable

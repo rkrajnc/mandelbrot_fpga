@@ -4,16 +4,20 @@
 
 
 module video_pipe_sync_top #(
-  parameter CCW   = 8,    // color component width
-  parameter TW    = 80,   // console text width in characters
-  parameter TH    = 2,    // console text height in characters
-  parameter CMAW  = 8,    // console memory address width
-  parameter CMDW  = 8,    // console memory data width
-  parameter IMAW  = 19,   // index memory address width
-  parameter IMDW  = 8,    // index memory data width
-  parameter CFR   = 200,  // console text foreground color red value
-  parameter CFG   = 200,  // console text foreground color green value
-  parameter CFB   = 200   // console text foreground color blue value
+  parameter CCW       = 8,    // color component width
+  parameter HCW       = 12,   // horizontal counter width
+  parameter VCW       = 12,   // vertical counter width
+  parameter H_ACTIVE  = 800,  // horizontal resolution
+  parameter V_ACTIVE  = 600,  // vertical resolution
+  parameter TW        = 80,   // console text width in characters
+  parameter TH        = 2,    // console text height in characters
+  parameter CMAW      = 8,    // console memory address width
+  parameter CMDW      = 8,    // console memory data width
+  parameter IMAW      = 19,   // index memory address width
+  parameter IMDW      = 8,    // index memory data width
+  parameter CFR       = 200,  // console text foreground color red value
+  parameter CFG       = 200,  // console text foreground color green value
+  parameter CFB       = 200   // console text foreground color blue value
 )(
   // system
   input  wire             clk,            // video clock
@@ -46,13 +50,7 @@ module video_pipe_sync_top #(
 
 
 //// local parameters ////
-localparam HCW        = 12;   // horizontal counter width
-localparam VCW        = 12;   // vertical counter width
 localparam F_CNT      = 60;   // number of frames in a second
-//localparam H_ACTIVE   = 640; // TODO!!
-//localparam V_ACTIVE   = 480;
-localparam H_ACTIVE   = 800; // TODO!!
-localparam V_ACTIVE   = 600;
 
 
 //// video sync generator ////
