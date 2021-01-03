@@ -90,6 +90,7 @@ wire            man_out_rdy;
 wire [ MIW-1:0] niter;
 wire [IMAW-1:0] adr_o;
 
+// since the man_init signal is possibly from another clk domain, sync it here
 always @ (posedge man_clk, posedge man_rst) begin
   if (man_rst)
     man_init_r <= #1 2'b00;

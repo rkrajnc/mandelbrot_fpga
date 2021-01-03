@@ -115,7 +115,7 @@ mandelbrot_calc #(
   .IW       (IW),       // width of iteration vars
   .FPW      (FPW),      // bitwidth of fixed-point numbers
   .AW       (AW)        // address width
-) mandelbrot_calc (
+) mandelbrot_calc_wrap (
   .clk      (clk      ),  // clock
   .clk_en   (clk_en   ),  // clock enable
   .rst      (rst      ),  // reset
