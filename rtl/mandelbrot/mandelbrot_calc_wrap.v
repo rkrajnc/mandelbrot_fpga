@@ -94,7 +94,7 @@ assign or_in_dat = {or_in_niter, or_in_adr};
 
 stream_reg #(
   .DW   (ODW) // data width
-) OUT_reg (
+) out_reg (
   .clk      (clk        ),  // clock
   .clk_en   (clk_en     ),  // clock enable
   .rst      (rst        ),  // reset
