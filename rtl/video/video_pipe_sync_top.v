@@ -27,6 +27,7 @@ module video_pipe_sync_top #(
   input  wire             en,             // enable video pipe
   input  wire             border_en,      // enable drawing of border
   input  wire             console_en,     // enable textual console
+  input  wire [    3-1:0] fader,          // video fader (0=no fade, 7=max fade)
   // video ram write interface
   input  wire             vram_clk_w,     // video memory write clock
   input  wire             vram_clk_en_w,  // video memory clock enable
@@ -122,7 +123,7 @@ video_sync_gen #(
 
 
 //// video sync signals delay ////
-localparam VD = 6; // amount of video pipe stages
+localparam VD = 7; // amount of video pipe stages
 reg  [     HCW-1:0] h_cnt_d   [0:VD-1];
 reg  [     VCW-1:0] v_cnt_d   [0:VD-1];
 reg                 active_d  [0:VD-1];
@@ -315,13 +316,75 @@ always @ (posedge clk) begin
 end
 
 
+//// fader ////
+reg  [ CCW-1:0] vid_fader_r;
+reg  [ CCW-1:0] vid_fader_g;
+reg  [ CCW-1:0] vid_fader_b;
+reg  [   3-1:0] fader_r0;
+reg  [   3-1:0] fader_r1;
+
+always @ (posedge clk) begin
+  if (clk_en) begin
+    fader_r0 <= #1 fader;
+    fader_r1 <= #1 fader_r0;
+  end
+end
+
+always @ (posedge clk) begin
+  if (clk_en) begin
+    case(fader_r1)
+      'h0 : begin
+        vid_fader_r <= #1 vid_mixer_r;
+        vid_fader_g <= #1 vid_mixer_g;
+        vid_fader_b <= #1 vid_mixer_b;
+      end
+      'h1 : begin
+        vid_fader_r <= #1 {1'h0, vid_mixer_r[CCW-1:1]};
+        vid_fader_g <= #1 {1'h0, vid_mixer_g[CCW-1:1]};
+        vid_fader_b <= #1 {1'h0, vid_mixer_b[CCW-1:1]};
+      end
+      'h2 : begin
+        vid_fader_r <= #1 {2'h0, vid_mixer_r[CCW-1:2]};
+        vid_fader_g <= #1 {2'h0, vid_mixer_g[CCW-1:2]};
+        vid_fader_b <= #1 {2'h0, vid_mixer_b[CCW-1:2]};
+      end
+      'h3 : begin
+        vid_fader_r <= #1 {3'h0, vid_mixer_r[CCW-1:3]};
+        vid_fader_g <= #1 {3'h0, vid_mixer_g[CCW-1:3]};
+        vid_fader_b <= #1 {3'h0, vid_mixer_b[CCW-1:3]};
+      end
+      'h4 : begin
+        vid_fader_r <= #1 {4'h0, vid_mixer_r[CCW-1:4]};
+        vid_fader_g <= #1 {4'h0, vid_mixer_g[CCW-1:4]};
+        vid_fader_b <= #1 {4'h0, vid_mixer_b[CCW-1:4]};
+      end
+      'h5 : begin
+        vid_fader_r <= #1 {5'h0, vid_mixer_r[CCW-1:5]};
+        vid_fader_g <= #1 {5'h0, vid_mixer_g[CCW-1:5]};
+        vid_fader_b <= #1 {5'h0, vid_mixer_b[CCW-1:5]};
+      end
+      'h6 : begin
+        vid_fader_r <= #1 {6'h0, vid_mixer_r[CCW-1:6]};
+        vid_fader_g <= #1 {6'h0, vid_mixer_g[CCW-1:6]};
+        vid_fader_b <= #1 {6'h0, vid_mixer_b[CCW-1:6]};
+      end
+      'h7 : begin
+        vid_fader_r <= #1 {7'h0, vid_mixer_r[CCW-1:7]};
+        vid_fader_g <= #1 {7'h0, vid_mixer_g[CCW-1:7]};
+        vid_fader_b <= #1 {7'h0, vid_mixer_b[CCW-1:7]};
+      end
+    endcase
+  end
+end
+
+
 //// output ////
-assign vid_active = active_d[5];
-assign vid_hsync  = hsync_d[5];
-assign vid_vsync  = vsync_d[5];
-assign vid_r      = vid_mixer_r;
-assign vid_g      = vid_mixer_g;
-assign vid_b      = vid_mixer_b;
+assign vid_active = active_d[6];
+assign vid_hsync  = hsync_d[6];
+assign vid_vsync  = vsync_d[6];
+assign vid_r      = vid_fader_r;
+assign vid_g      = vid_fader_g;
+assign vid_b      = vid_fader_b;
 
 
 endmodule
