@@ -5,7 +5,8 @@
 
 module ctrl_top #(
   parameter MI  = "",   // memory initialization file
-  parameter FPW = 2*27  // fixed-point width
+  parameter FPW = 2*27, // fixed-point width
+  parameter CW  = 12    // counter width
 )(
   // system
   input  wire           clk,
@@ -16,7 +17,17 @@ module ctrl_top #(
   output wire [FPW-1:0] man_x0,
   output wire [FPW-1:0] man_y0,
   output wire [FPW-1:0] man_xs,
-  output wire [FPW-1:0] man_ys
+  output wire [FPW-1:0] man_ys,
+  output wire [ CW-1:0] man_hres,
+  output wire [ CW-1:0] man_vres,
+  output wire [ 32-1:0] man_npixels,
+  input  wire [ 32-1:0] man_niters,
+  input  wire [ 32-1:0] man_timer,
+  input  wire           man_st_done,
+  output wire [  3-1:0] vid_fader,
+  output wire           con_we,
+  output wire [ 32-1:0] con_adr,
+  output wire [  8-1:0] con_dat_w
 );
 
 
@@ -134,24 +145,35 @@ ctrl_regs #(
   .QAW  (SAW),
   .QDW  (QDW),
   .QSW  (QSW),
-  .FPW  (FPW)
+  .FPW  (FPW),
+  .CW   (CW)
 ) regs (
-  .clk      (clk        ),
-  .rst      (rst        ),
-  .adr      (regs_adr   ),
-  .cs       (regs_cs    ),
-  .we       (regs_we    ),
-  .sel      (regs_sel   ),
-  .dat_w    (regs_dat_w ),
-  .dat_r    (regs_dat_r ),
-  .ack      (regs_ack   ),
-  .err      (regs_err   ),
-  .man_done (man_done   ),
-  .man_init (man_init   ),
-  .man_x0   (man_x0     ),
-  .man_y0   (man_y0     ),
-  .man_xs   (man_xs     ),
-  .man_ys   (man_ys     )
+  .clk          (clk        ),
+  .rst          (rst        ),
+  .adr          (regs_adr   ),
+  .cs           (regs_cs    ),
+  .we           (regs_we    ),
+  .sel          (regs_sel   ),
+  .dat_w        (regs_dat_w ),
+  .dat_r        (regs_dat_r ),
+  .ack          (regs_ack   ),
+  .err          (regs_err   ),
+  .man_done     (man_done   ),
+  .man_init     (man_init   ),
+  .man_x0       (man_x0     ),
+  .man_y0       (man_y0     ),
+  .man_xs       (man_xs     ),
+  .man_ys       (man_ys     ),
+  .man_hres     (man_hres   ),
+  .man_vres     (man_vres   ),
+  .man_npixels  (man_npixels),
+  .man_niters   (man_niters ),
+  .man_timer    (man_timer  ),
+  .man_st_done  (man_st_done),
+  .vid_fader    (vid_fader  ),
+  .con_we       (con_we     ),
+  .con_adr      (con_adr    ),
+  .con_dat_w    (con_dat_w  )
 );
 
 
