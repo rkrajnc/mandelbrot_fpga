@@ -1,6 +1,10 @@
 ../../rtl/top/mandelbrot_fpga_top.sv
 ../../rtl/mandelbrot/mandelbrot_top.v
 ../../rtl/mandelbrot/mandelbrot_coords.v
+../../rtl/stream/stream_reg.v
+../../rtl/stream/stream_distributor.v
+../../rtl/stream/stream_collector.v
+../../rtl/mandelbrot/mandelbrot_calc_wrap.v
 ../../rtl/mandelbrot/mandelbrot_calc.v
 ../../rtl/fifo/async_fifo.v
 ../../rtl/fifo/sync_fifo.v
@@ -24,7 +28,6 @@
 ../../rtl/or1200/or1200_dc_tag.v
 ../../rtl/or1200/or1200_dc_top.v
 ../../rtl/or1200/or1200_defines.v
-../../rtl/or1200/or1200_defines.v~
 ../../rtl/or1200/or1200_dmmu_tlb.v
 ../../rtl/or1200/or1200_dmmu_top.v
 ../../rtl/or1200/or1200_dpram_32x32.v
