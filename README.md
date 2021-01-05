@@ -7,6 +7,7 @@
 ## Description
 A Mandelbrot set engine running on a Terasic DE10-nano (MiSTer) FPGA board. Currently, only a CPU controlled slideshow in 800x600 resolution is implemented, but most of the parts are already there.
 
+Read more about it here: https://somuch.guru/category/mandelbrot/
 
 ### TODOs
 Create a proper MiSTer core with ability to be controlled (moved around, zoomed, etc) with the keyboard / joypad ...
