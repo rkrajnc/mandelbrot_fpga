@@ -7,7 +7,7 @@ __ram_start = 0x00000000;
 __ram_length = 8k;
 
 __stack     = __ram_start + __ram_length - 0x4;
-_heap_end   = __stack - 0x80;
+_heap_end   = __stack - 0x400;
 PROVIDE (__stack =  __ram_start + __ram_length - 0x4);
 PROVIDE (__rom_size = __data_end - __ram_start);
 

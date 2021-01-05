@@ -4,6 +4,7 @@
 
 #include "string.h"
 
+
 /* returns number of characters in s (not including terminating null character) */
 size_t strlen(const char *s)
 {

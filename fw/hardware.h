@@ -59,9 +59,23 @@
 #define REG_MAN_XS_1_ADR    (REG_START + 0x1c)
 #define REG_MAN_YS_0_ADR    (REG_START + 0x20)
 #define REG_MAN_YS_1_ADR    (REG_START + 0x24)
+#define REG_MAN_HRES_ADR    (REG_START + 0x28)
+#define REG_MAN_VRES_ADR    (REG_START + 0x2c)
+#define REG_MAN_NPIXELS_ADR (REG_START + 0x30)
+#define REG_MAN_ST_DONE_ADR (REG_START + 0x34)
+#define REG_MAN_NITERS_ADR  (REG_START + 0x38)
+#define REG_MAN_TIMER_ADR   (REG_START + 0x3c)
+#define REG_VID_FADER_ADR   (REG_START + 0x40)
+#define REG_TIMER_EN_ADR    (REG_START + 0x80)
+#define REG_TIMER_CLR_ADR   (REG_START + 0x84)
+#define REG_TIMER_ADR       (REG_START + 0x88)
+#define CONSOLE_START       (REG_START + 0x800)
 
 
 //// system stuff ////
+// nop
+#define nop()               asm("l.nop\t3");
+
 // align
 #define ALIGN(addr,size)    ((addr + (size-1))&(~(size-1)))
 

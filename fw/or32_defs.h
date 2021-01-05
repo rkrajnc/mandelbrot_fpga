@@ -2,7 +2,7 @@
 #define __OR32_DEFS_H__
 
 
-#define OR32_STACK_SIZE           0x80
+#define OR32_STACK_SIZE           0x400
 
 #define OR32_RESET_VECTOR_ROM     0x004
 #define OR32_INT_VECTOR_ROM       0x020

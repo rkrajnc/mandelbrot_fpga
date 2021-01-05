@@ -48,7 +48,7 @@ HEX2MIF = $(HEX2MIF_DIR)hex2mif.py
 
 
 CFLAGS +=   -W -Wall -Wpadded -Winline -std=gnu99 -g \
-            -O3 \
+            -Os \
             -fomit-frame-pointer -ffreestanding -static -combine -fwhole-program \
             -fno-strict-aliasing \
             -fno-builtin  -nostdlib \
@@ -86,7 +86,7 @@ HEADERS=spr_defs.h or32_defs.h hardware.h string.h
 ASM_SOURCES=start.S
 
 # common sources
-COMMON_SOURCES=main.c hardware.c string.c
+COMMON_SOURCES=main.c hardware.c strlen.c vsnprintf.c sprintf.c
  
 # all sources
 ALL_SOURCES = $(ASM_SOURCES) $(COMMON_SOURCES)
