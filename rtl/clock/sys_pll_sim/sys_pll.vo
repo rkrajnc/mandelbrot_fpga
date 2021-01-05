@@ -230,7 +230,7 @@ module  sys_pll
 		sys_pll_altera_pll_altera_pll_i_1557.n_cnt_odd_div_duty_en = "false",
 		sys_pll_altera_pll_altera_pll_i_1557.number_of_clocks = 3,
 		sys_pll_altera_pll_altera_pll_i_1557.operation_mode = "normal",
-		sys_pll_altera_pll_altera_pll_i_1557.output_clock_frequency0 = "200.000000 MHz",
+		sys_pll_altera_pll_altera_pll_i_1557.output_clock_frequency0 = "150.000000 MHz",
 		sys_pll_altera_pll_altera_pll_i_1557.output_clock_frequency1 = "50.000000 MHz",
 		sys_pll_altera_pll_altera_pll_i_1557.output_clock_frequency10 = "0 MHz",
 		sys_pll_altera_pll_altera_pll_i_1557.output_clock_frequency11 = "0 MHz",
