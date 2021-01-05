@@ -1,0 +1,87 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Jan  3 17:21:57 2021
+[*]
+[dumpfile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/top/out/mandelbrot_top/wav/waves.vcd"
+[dumpfile_mtime] "Sun Jan  3 17:15:27 2021"
+[dumpfile_size] 9478430
+[savefile] "/home/rkrajnc/Dropbox/work/electronics/fpga/mandelbrot_fpga/sim/top/gtkwave2.gtkw"
+[timestart] 5643500
+[size] 2560 1291
+[pos] -1 -1
+*-16.000000 5751000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mandelbrot_top_tb.
+[treeopen] mandelbrot_top_tb.DUT.
+[treeopen] mandelbrot_top_tb.DUT.mandelbrot_top.
+[sst_width] 483
+[signals_width] 158
+[sst_expanded] 1
+[sst_vpaned_height] 392
+@28
+mandelbrot_top_tb.DUT.mandelbrot_top.clk[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.rst[0]
+@200
+-
+@28
+mandelbrot_top_tb.DUT.mandelbrot_top.init[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.coord_vld[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.coord_rdy[0]
+@22
+mandelbrot_top_tb.DUT.mandelbrot_top.calc_adr[18:0]
+mandelbrot_top_tb.DUT.mandelbrot_top.adr[18:0]
+mandelbrot_top_tb.DUT.mandelbrot_top.x[53:0]
+mandelbrot_top_tb.DUT.mandelbrot_top.y[53:0]
+@200
+-
+@22
+mandelbrot_top_tb.DUT.mandelbrot_top.fifo_in[126:0]
+@28
+mandelbrot_top_tb.DUT.mandelbrot_top.fifo_wr_en[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.fifo_rd_en[0]
+@22
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_fifo.cnt[4:0]
+@200
+-
+@28
+mandelbrot_top_tb.DUT.mandelbrot_top.sd_in_vld[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.sd_in_rdy[0]
+@800028
+mandelbrot_top_tb.DUT.mandelbrot_top.sd_out_vld[1:0]
+@28
+(0)mandelbrot_top_tb.DUT.mandelbrot_top.sd_out_vld[1:0]
+(1)mandelbrot_top_tb.DUT.mandelbrot_top.sd_out_vld[1:0]
+@1001200
+-group_end
+@800028
+mandelbrot_top_tb.DUT.mandelbrot_top.sd_out_rdy[1:0]
+@28
+(0)mandelbrot_top_tb.DUT.mandelbrot_top.sd_out_rdy[1:0]
+(1)mandelbrot_top_tb.DUT.mandelbrot_top.sd_out_rdy[1:0]
+@1001200
+-group_end
+@200
+-
+@22
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[0].niters[8:0]
+@28
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[0].check[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[0].limit_check[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[0].in_vld[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[0].in_rdy[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[0].out_vld[0]
+@29
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[0].out_rdy[0]
+@200
+-
+@28
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[1].in_vld[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[1].in_rdy[0]
+@22
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[1].niters[8:0]
+@28
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[1].check[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[1].limit_check[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[1].out_vld[0]
+mandelbrot_top_tb.DUT.mandelbrot_top.mandelbrot_calc_wrap[1].out_rdy[0]
+[pattern_trace] 1
+[pattern_trace] 0
