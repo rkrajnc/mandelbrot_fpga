@@ -36,7 +36,7 @@ localparam CW       = 12;               // pixel counters width
 localparam NPIXELS  = VHR*VVR;          // number of pixels
 
 // console
-localparam TW       = 80;               // console text width
+localparam TW       = 100;              // console text width
 localparam TH       = 2;                // console text height
 localparam NCHARS   = TW*TH;            // number of characters in console
 localparam CMAW     = $clog2(NCHARS);   // console address width
@@ -61,25 +61,46 @@ localparam FDW      = IMAW+IMDW;        // fifo data width
 
 
 //// control ////
-wire            man_init; // Mandebrot engine start
-wire            man_done; // Mandelbrot engine done
-wire [ FPW-1:0] man_x0;   // leftmost Mandelbrot coordinate
-wire [ FPW-1:0] man_y0;   // uppermost Mandelbrot coordinate
-wire [ FPW-1:0] man_xs;   // Mandelbrot x step
-wire [ FPW-1:0] man_ys;   // Mandelbrot y step
+wire            man_init;     // Mandebrot engine start
+wire            man_done;     // Mandelbrot engine done
+wire [ FPW-1:0] man_x0;       // leftmost Mandelbrot coordinate
+wire [ FPW-1:0] man_y0;       // uppermost Mandelbrot coordinate
+wire [ FPW-1:0] man_xs;       // Mandelbrot x step
+wire [ FPW-1:0] man_ys;       // Mandelbrot y step
+wire [  CW-1:0] man_hres;     // Mandelbrot horizontal pixel resolution
+wire [  CW-1:0] man_vres;     // Mandelbrot vertical pixel resolution
+wire [  32-1:0] man_npixels;  // Mandelbrot number of pixels
+wire [  32-1:0] man_niters;   // Mandelbrot number of screen iterations
+wire [  32-1:0] man_timer;    // time passed
+wire            man_st_done;  // Mandelbrot stats done
+wire [   3-1:0] vid_fader;    // video fader
+wire            con_we;       // console write enable
+wire [CMAW-1:0] con_adr;      // console address
+wire [CMDW-1:0] con_dat_w;    // console write data
 
 ctrl_top #(
   .MI ("../../roms/ctrl_boot.hex"),
-  .FPW  (FPW)
+  .FPW  (FPW),
+  .CW   (CW)
 ) ctrl_top (
-  .clk        (sys_clk  ),
-  .rst        (sys_rst  ),
-  .man_init   (man_init ),
-  .man_done   (man_done ),
-  .man_x0     (man_x0   ),
-  .man_y0     (man_y0   ),
-  .man_xs     (man_xs   ),
-  .man_ys     (man_ys   )
+  .clk          (sys_clk    ),
+  .rst          (sys_rst    ),
+  .man_init     (man_init   ),
+  .man_done     (man_done   ),
+  .man_x0       (man_x0     ),
+  .man_y0       (man_y0     ),
+  .man_xs       (man_xs     ),
+  .man_ys       (man_ys     ),
+  .man_hres     (man_hres   ),
+  .man_vres     (man_vres   ),
+  .man_npixels  (man_npixels),
+  .man_niters   (man_niters ),
+  .man_timer    (man_timer  ),
+  .man_st_done  (man_st_done),
+  .vid_fader    (vid_fader  ),
+  .con_we       (con_we     ),
+  .con_adr      (con_adr    ),
+  .con_dat_w    (con_dat_w  )
 );
 
 
@@ -106,19 +127,25 @@ mandelbrot_top #(
   .CW       (CW       ),  // screen counter width
   .FD       (MFD      )   // fifo depth
 ) mandelbrot_top (
-  .clk      (man_clk      ),  // clock
-  .clk_en   (man_clk_en   ),  // clock enable
-  .rst      (man_rst      ),  // reset
-  .init     (man_init_r[1]),  // enable mandelbrot calculation (posedge sensitive!)
-  .done     (man_done     ),  // mandelbrot engine done
-  .man_x0   (man_x0       ),  // leftmost Mandelbrot coordinate
-  .man_y0   (man_y0       ),  // uppermost Mandelbrot coordinate
-  .man_xs   (man_xs       ),  // Mandelbrot x step
-  .man_ys   (man_ys       ),  // Mandelbrot y step
-  .out_vld  (man_out_vld  ),  // output valid
-  .out_rdy  (man_out_rdy  ),  // output ready to receive (ack)
-  .out_dat  (niter        ),  // number of iterations
-  .out_adr  (adr_o        )   // mandelbrot coordinate address output
+  .clk        (man_clk      ),  // clock
+  .clk_en     (man_clk_en   ),  // clock enable
+  .rst        (man_rst      ),  // reset
+  .init       (man_init_r[1]),  // enable mandelbrot calculation (posedge sensitive!)
+  .done       (man_done     ),  // mandelbrot engine done
+  .hres       (man_hres     ),  // horizontal resolution
+  .vres       (man_vres     ),  // vertical resolution
+  .npixels    (man_npixels  ),  // number of pixels (for stats)
+  .man_x0     (man_x0       ),  // leftmost Mandelbrot coordinate
+  .man_y0     (man_y0       ),  // uppermost Mandelbrot coordinate
+  .man_xs     (man_xs       ),  // Mandelbrot x step
+  .man_ys     (man_ys       ),  // Mandelbrot y step
+  .niters     (man_niters   ),  // number of all iterations
+  .timer      (man_timer    ),  // time passed
+  .stats_done (man_st_done  ),  // statistics done
+  .out_vld    (man_out_vld  ),  // output valid
+  .out_rdy    (man_out_rdy  ),  // output ready to receive (ack)
+  .out_dat    (niter        ),  // number of iterations
+  .out_adr    (adr_o        )   // mandelbrot coordinate address output
 );
 
 
@@ -167,7 +194,7 @@ wire [IMDW-1:0] vram_dat_w;
 
 assign vid_en         = 1'b1;
 assign vid_border_en  = 1'b0;
-assign vid_console_en = 1'b0;
+assign vid_console_en = 1'b1;
 assign vram_we        = !fifo_empty;
 assign vram_adr_w     = fifo_out[IMAW+IMDW-1:IMDW];
 assign vram_dat_w     = fifo_out[IMDW-1:0];
@@ -194,16 +221,17 @@ video_pipe_sync_top #(
   .en             (vid_en         ),  // enable video pipe
   .border_en      (vid_border_en  ),  // enable drawing of border
   .console_en     (vid_console_en ),  // enable textual console
+  .fader          (vid_fader      ),  // video fader (0=no fade, 7=max fade)
   .vram_clk_w     (vga_clk        ),  // video memory write clock
   .vram_clk_en_w  (vga_clk_en     ),  // video memory clock enable
   .vram_we        (vram_we        ),  // video memory write enable
   .vram_adr_w     (vram_adr_w     ),  // video memory write address
   .vram_dat_w     (vram_dat_w     ),  // video memory write data
-  .con_clk_w      (1'b0           ),  // console memory write clock
-  .con_clk_en_w   (1'b0           ),  // console memory clock enable
-  .con_we         (1'b0           ),  // console memory write enable
-  .con_adr_w      ({CMAW{1'bx}}   ),  // console memory write address
-  .con_dat_w      ({CMDW{1'bx}}   ),  // console memory write data
+  .con_clk_w      (sys_clk        ),  // console memory write clock
+  .con_clk_en_w   (sys_clk_en     ),  // console memory clock enable
+  .con_we         (con_we         ),  // console memory write enable
+  .con_adr_w      (con_adr        ),  // console memory write address
+  .con_dat_w      (con_dat_w      ),  // console memory write data
   .vid_active     (vga_vld        ),  // video active (not blanked)
   .vid_hsync      (vga_hsync      ),  // video horizontal sync
   .vid_vsync      (vga_vsync      ),  // video vertical sync
