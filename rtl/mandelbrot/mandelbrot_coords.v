@@ -56,13 +56,14 @@ wire signed [54-1:0] man_ys = 54'h000000000502c3;
 
 
 //// screen x/y counters /////
-reg  [CW-1:0] cnt_x;
-reg  [CW-1:0] cnt_y;
-reg  [AW-1:0] cnt_adr;
-reg           cnt_en;
-
+reg          [CW-1:0] cnt_x;
+reg          [CW-1:0] cnt_y;
+reg          [AW-1:0] cnt_adr;
+reg                   cnt_en;
 reg  signed [FPW-1:0] man_x;
 reg  signed [FPW-1:0] man_y;
+reg         [ CW-1:0] hres_r;
+reg         [ CW-1:0] vres_r;
 
 
 always @ (posedge clk, posedge rst) begin
@@ -74,8 +75,10 @@ always @ (posedge clk, posedge rst) begin
     cnt_en  <= #1 1'b0;
     man_x   <= #1 'd0;
     man_y   <= #1 'd0;
+    hres_r  <= #1 'd0;
+    vres_r  <= #1 'd0;
   end else if (clk_en) begin
-    if (init) begin
+    if (init && !cnt_en) begin
       done    <= #1 1'b0;
       cnt_x   <= #1 'd0;
       cnt_y   <= #1 'd0;
@@ -83,9 +86,11 @@ always @ (posedge clk, posedge rst) begin
       cnt_en  <= #1 1'b1;
       man_x   <= #1 man_x0;
       man_y   <= #1 man_y0;
+      hres_r  <= #1 hres - 'd1;
+      vres_r  <= #1 vres - 'd1;
     end else if (out_rdy && cnt_en) begin
-      if (cnt_x == hres) begin
-        if (cnt_y == vres) begin
+      if (cnt_x == hres_r) begin
+        if (cnt_y == vres_r) begin
           cnt_en  <= #1 1'b0;
           done    <= #1 1'b1;
         end else begin
