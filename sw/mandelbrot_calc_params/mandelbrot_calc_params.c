@@ -143,14 +143,14 @@ int main(int argc, char*argv[])
     fclose(fp);
   } else {
     // to screen
-    printf("%s\n", man_x0_vs);
-    printf("%s\n", man_y0_vs);
-    printf("%s\n", man_xs_vs);
-    printf("%s\n", man_ys_vs);
-    printf("%s\n", man_x0_cs);
-    printf("%s\n", man_y0_cs);
-    printf("%s\n", man_xs_cs);
-    printf("%s\n", man_ys_cs);
+    //printf("%s\n", man_x0_vs);
+    //printf("%s\n", man_y0_vs);
+    //printf("%s\n", man_xs_vs);
+    //printf("%s\n", man_ys_vs);
+    //printf("%s\n", man_x0_cs);
+    //printf("%s\n", man_y0_cs);
+    //printf("%s\n", man_xs_cs);
+    //printf("%s\n", man_ys_cs);
     printf("                           {0x%016lxLL, 0x%016lxLL, 0x%016lxLL, 0x%016lxLL},\n", man_x0_fp, man_y0_fp, man_xs_fp, man_ys_fp);
   }
 
